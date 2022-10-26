@@ -1,6 +1,8 @@
 \documentclass[12pt]{article}  % [12pt] option for the benefit of aging markers
 \usepackage{amssymb,amsthm}    % amssymb package contains more mathematical symbols
 \usepackage{graphicx}          % graphicx package enables you to paste in graphics
+\usepackage[document]{ragged2e} 
+\usepackage{float}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -27,12 +29,14 @@
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{example}[theorem]{Example} 
+\graphicspath{ {./Images/} }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %        Preamble material specific to your essay
 %
-\title{Deliverable 1: Research Report}
+\title{Logic-Based Solutions to Puzzles and Riddles\\
+Deliverable 1: Research Report}
 \author{Kyle Dick\\
 F20PA Project\\
 supervised by
@@ -43,9 +47,7 @@ Kathrin Stark}
 
 \newpage                     % optional page break
 \begin{abstract}
-
-Write a short abstract of your essay here.
-
+Describe the problem that is to be approached.
 
 
 \end{abstract}
@@ -56,67 +58,100 @@ Write a short abstract of your essay here.
 \newpage                     % optional page break
 \section{Introduction}\label{s:intro}
 %
+%In recent times a global interest has developed around the linguistic game Wordle. The concept of this puzzle is simple, the user is to guess a five letter word in as few guesses as possible within six attempts. After each guess the computer will inform the user if a letter was in the correct position, denoted as a green highlight, or is contained within the word but not in the correct %position, denoted with a yellow highlight.
+The main focus of this project is to investigate solutions to the puzzle game known as Mastermind. The approach will be to develop an initial base solution in a functional programming language which can be iteratively improved with the goal of creating a solution which is logically sound and efficient.
+Mastermind is a simple code-breaking game in which one player will create a secret code which conists of four coloured pegs from a choice of six. This is the standard version of the game however there are multiple variations of the game, some of which will be discussed and examined within the scope of this project.
+
+\subsection {Aims and Objectives}
+\begin {itemize}
+
+\item{Aim 1: To derive a solution to Mastermind using logic and equational reasoning.}
+	\begin {itemize}
+	\item{Objective 1A: Investigate solutions to similar problems. This will give an idea of how an implementation should be approached.}
+	\item{Objective 1B:  Implement a base solution using simple logic without consideration to efficiency. This basic solution should only be concerned with giving a foundation that can be 		refined in later iterations.}
+	\item{Objective 1C: Iterate and improve on solutions using a declared evaluation process.}
+	\end {itemize}
+Aim 2: Evaluate solutions and identify a desired solution.
+	\begin {itemize}
+	\item{Objective 2A: Create an evaluation strategy by identifying which aspects of the solution would best show improvement between iterations.}
+	\item{Objective 2B: Analyse an iteration using the chosen strategy.}
+	\item{Objective 2C: Report the results of the evaluation strategy and iterate if improvements are identified.}
+	\item{Objective 2D: Document results taken to arrive at a desired solution.}
+	\end {itemize}
+\end {itemize}
+
+
+%
 % The \label command is optional, but useful.  To cross-refer to a section/theorem/equation etc.
 % labelled by \label{key}, use \ref{key}.  For example: Equation (\ref{eq:key}) follows from Theorem \ref{th:key}.
 
-\subsection{Background}\label{ss:back}
+\newpage                     % optional page break
+\section{Background}\label{ss:back}
+This section will provide background material which aims to give context to the aims and objectives of this project. What follows this brief introduction is an explanation of the game Mastermind which the solution will be derived from along with references to previous work by others. The previous work will relate to the field of functional programming and the specific area of logic and equational reasoning. At the conclusion of this section the goal is that the reader has an understanding of the important concepts relating to this project such that the aims and objectives are clear in their feasability and relevancy.
 
-\begin{theorem}\label{th:important}
- An important mathematical theorem
-\end{theorem}
+\subsection {Mastermind}
+% A brief history and explanation of the game
+Mastermind is a code-breaking board game designed by Mordecai Meirowitz originally manufactured by Invicta Toys and Games \cite{Invicta}. 
+The original board game consisted of two players with different roles. Player A would be designated the code-breaker while Player B would attempt to solve the code.
 
-See \cite[Chapter 3]{Cassels} or \cite{Bovey} for more details.
+The process of the game is as follows.
+Player A would first contruct the code from a set of six coloured pegs with the code being exactly four pegs in length. There are variants where the size of the set of choices and code length are variable however this describes the standard variant.
 
-\begin{proof}
-The `proof' environment provides a standard beginning and end for your proofs,
-and takes care of the spacing around them.
-\end{proof}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.75]{pegs}
+\caption{ Example of code enumerations Player A could construct}
+\end{figure}
 
-\section{Graphics}
+The challenge for Player B is to correctly guess the code created by considering feedback given from Player A relating to how correct each guess was.
+A guess is evaluated with Player B given a number of pegs with two possible colours, one which represents a correct position and another which represents a correct colour.
 
-Graphics files in PDF or JPEG format can be pasted in using the code
-below (remove the \%\ signs and edit according to your needs).
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.75]{guesses}
+\caption{ Simplified example of Player B guesses}
+\end{figure}
 
-%  \begin{center}
-%  \includegraphics{myfile.pdf}
-%  \includegraphics{myfile.jpg}
-%
-%  \includegraphics[width=175mm]{myfile.pdf}    if you need to change the size
-%
-%  \includegraphics[width=150mm, height=100mm]{myfile.pdf}  if you need to change the size in both directions
-%
-%  \includegraphics[angle=90]{myfile.pdf}     if you need to rotate the image
-%
-%  \includegraphics[angle=270,width=120mm]{myfile.pdf}  if you need to rotate and change size
-%
-%  \end{center}
+% A reiteration of the goals with this context
+\par The solution that this project aims to implement would assume the role of Player B attempting to correctly identify the generated code in the minimum number of guesses.
+To provide a solution which is not bound by the number of elements within the set of possible choices or the length of the code, the code will follow the following rules.
 
-\section{Lists and Tables}
+\[ code = [c_i, ... ,c_n]\]
+\[pegs = \{c_i, ... , c_m\}\]
+\[ n,m = \mathbb{N} > 1\]
 
-It is often useful to display information in the form of a list or a table.
-Here will display some examples of:
+% Possible small note about variations and how these could change the goals
+A solution which is agnostic of the code length and number of possible elements would support basic variants of Mastermind where the only difference are these restrictions. The base solution will solely focus on solving for a code of length four with six possible elements.
 
-\begin{itemize}
-\item A function $f$;
-\item Its derivative $f'$; and
-\item Its indefinite integral $\int f$.
-\end{itemize}
-
-\begin{center}              % center the table
-\begin{tabular}{|r|r|r|}    % three columns, each right-justified
-\hline                      % horizontal line between rows
-$f$ & $f'$ & $\int f$ \\    % header row
-\hline
-$x^3$ & $3x^2$ & $x^4/4$ \\
-$\cos(x)$ & $-\sin(x)$ & $\sin(x)$ \\
-$e^x$ & $e^x$ & $e^x$\\
-\hline
-\end{tabular}               % close the table
-\end{center}                % exit the center environment
-
-\section{Conclusions}\label{s:conc}
+\subsection {Functional Pearls}
+% What are Functional Pearls and why introduce the concept
+The solution that this project seeks to implement will utilise functional programming to acheive its goals. This required an analysis of similar problems which have seen investigation in the field. An area which proves useful for this area of research is the topic of Functional Pearls.
 
 
+
+% Are there any that would be relevant to this (Simple Sudoku Solver)
+
+% Maybe something about the 
+
+\subsection {Logic and Equational Reasoning}
+% Discussion of what a logical approach to programming would be
+
+% Equational Reasoning vs Maths
+
+\newpage                     % optional page break
+\section{Research Methodology}\label{ss:back}
+
+\newpage                     % optional page break
+\section{Evaluation Strategy}\label{ss:back}
+
+\newpage                     % optional page break
+\section{Project Management}\label{ss:back}
+
+\subsection {File and Resource Management}
+
+\subsection {Timeline and Deadlines}
+
+\subsection {Risk Analysis and Mitigations}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -134,38 +169,42 @@ $e^x$ & $e^x$ & $e^x$\\
 % websites with no author names should go by the site name
 %
 
-
-
 % Typical layout for reference to a journal article
-%
-\bibitem{Bovey}
-J. D. Bovey, M. M. Dodson,                         % author(s)
-The Hausdorff dimension of systems of linear forms % article name
-{\em Acta Arithmetica}                             % journal name - italics
-{\bf 45}                                           % volume number - bold
-(1986), 337--358.                                   % (year), page range
+%\bibitem{Bovey}
+%J. D. Bovey, M. M. Dodson,                         % author(s)
+%The Hausdorff dimension of systems of linear forms % article name
+%{\em Acta Arithmetica}                             % journal name - italics
+%{\bf 45}                                           % volume number - bold
+%(1986), 337--358.                                   % (year), page range
+
 
 % Typical layout for reference to a book
 %
-\bibitem{Cassels}
-J. W. S. Cassels,                                  % author(s)
-{\em An Introduction to Diophantine Approximation},% title - italics
-Cambridge University Press, Cambridge, 1965.       % Publisher, place, date.
+%\bibitem{Cassels}
+%J. W. S. Cassels,                                  % author(s)
+%{\em An Introduction to Diophantine Approximation},% title - italics
+%Cambridge University Press, Cambridge, 1965.       % Publisher, place, date.
 
 % Typical layout for reference to a website
 %
-\bibitem{GAP}
-The GAP Group, GAP -- Groups, Algorithms, and Programming,  % Site name
-Version 4.5.6; 2012. % other information
-(http://www.gap-system.org)  % URL
+%\bibitem{GAP}
+%The GAP Group, GAP -- Groups, Algorithms, and Programming,  % Site name
+%Version 4.5.6; 2012. % other information
+%(http://www.gap-system.org)  % URL
 
 
 % Typical layout for reference to an online article
-%
-\bibitem{Howie}
-J. Howie,                                            % author(s)
-{\em Generalised triangle groups of type $(3,5,2)$}, % article name - italics
-http://arxiv.org/abs/1102.2073                       % URL
-(2011).                                              % (year)
+
+%\bibitem{Howie}
+%J. Howie,                                            % author(s)
+%{\em Generalised triangle groups of type $(3,5,2)$}, % article name - italics
+%http://arxiv.org/abs/1102.2073                       % URL
+%(2011).                                              % (year)
+
+\bibitem {Invicta}
+Invicta Toys and Games ltd,
+{\em History of Mastermind}
+https://web.archive.org/web/20070812104420/http://dspace.dial.pipex.com/town/road/gbd76/toys.htm
+(Archived 2007)
 \end{thebibliography}
 \end{document}
