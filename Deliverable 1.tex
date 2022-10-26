@@ -3,6 +3,7 @@
 \usepackage{graphicx}          % graphicx package enables you to paste in graphics
 \usepackage[document]{ragged2e} 
 \usepackage{float}
+\usepackage{tabularx}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -97,6 +98,8 @@ The original board game consisted of two players with different roles. Player A 
 The process of the game is as follows.
 Player A would first contruct the code from a set of six coloured pegs with the code being exactly four pegs in length. There are variants where the size of the set of choices and code length are variable however this describes the standard variant.
 
+A variant of the original mastermind puzzle was explored 
+
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.75]{pegs}
@@ -123,18 +126,21 @@ To provide a solution which is not bound by the number of elements within the se
 % Possible small note about variations and how these could change the goals
 A solution which is agnostic of the code length and number of possible elements would support basic variants of Mastermind where the only difference are these restrictions. The base solution will solely focus on solving for a code of length four with six possible elements.
 
+[This section should be extended with discussion of Clear Mastermind with focus paid to the foundation laid out by the researchers involved.
+
 \subsection {Functional Pearls}
 % What are Functional Pearls and why introduce the concept
 The solution that this project seeks to implement will utilise functional programming to acheive its goals. This required an analysis of similar problems which have seen investigation in the field. An area which proves useful for this area of research is the topic of Functional Pearls.
 
-
+Functional Pearls are examples of programming which aim to teach important programming techniques and fundamental design principles \cite{Pearls}. Functional Pearls focus on brief but engaging examples that showcase either a guided explanation to a program calculation or proof or presenation of unique data structures. The encompassing feature of Functional Pearls is that they showcase educational material in a way that is digestable and entertaining.
 
 % Are there any that would be relevant to this (Simple Sudoku Solver)
+A functional Pearl example which holds relevance to the current project is Richard Bird's 'A Program to Solve Sudoku' \cite{Sudoku}. This paper focused on using equational reasoning over mathematics to implement a solution to sudoku puzzles written in Haskell. This solution is relevant to the current project due to the factor they share similar problems of code breaking. The approach of this solution was to start with a base solution which would generate a large volume of possible boards which would be matched to a given input. The conclusion of the study resulted in an elegant solution which would apply equational reasoning to derive a function capable of giving multiple possible solutions to the given input. The limitations were compared to similar solutions which showed a struggle with larger inputs but an increase over other implementations with simplified board states.
 
-% Maybe something about the 
 
 \subsection {Logic and Equational Reasoning}
 % Discussion of what a logical approach to programming would be
+The goal with the solution this project aims for is to implement a solution which is logically sound. This means for the project to succeed
 
 % Equational Reasoning vs Maths
 
@@ -144,6 +150,7 @@ The solution that this project seeks to implement will utilise functional progra
 \newpage                     % optional page break
 \section{Evaluation Strategy}\label{ss:back}
 
+
 \newpage                     % optional page break
 \section{Project Management}\label{ss:back}
 
@@ -152,6 +159,28 @@ The solution that this project seeks to implement will utilise functional progra
 \subsection {Timeline and Deadlines}
 
 \subsection {Risk Analysis and Mitigations}
+
+To manage the progress of this project efficiently it was important to identify possible risks that could prevent the realisation of the goals laid out earlier in this document. To aid in the identification of the risks the following key was used to classify the associated risks:
+\begin{itemize}
+\item{People (P) - Risks which are the result of issues related to those individuals involved in the engineering of solutions.}
+\item{Technological (T) - Risks which result from the technology being used to engineer the solutions. This involves the software, hardware and frameworks used.}
+\item{Requirement (R)  - Risks which result from changes to the requirements of the project. Examples of such being a requirement being dropped from the scope or a requirements priority undergoing a change.}
+\item{Estimation (E) - Risks which result from ill estimations of the project timing, capabilities of an individual or understanding of a certain technology.}
+\end{itemize}
+
+\begin{tabularx}{1.1\textwidth} {
+	|  >{\center\arraybackslash}X
+	| >{\center\arraybackslash}X
+	| >{\center\arraybackslash}X
+	| >{\center\arraybackslash} X | }
+	\hline
+	ID & Risk & Risk Type & Description \\
+	\hline
+	P/T/R/E1 & Textual Title of Risk & Class of Risk & Textual Description of the Risk \\
+	\hline
+\end{tabularx}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -206,5 +235,17 @@ Invicta Toys and Games ltd,
 {\em History of Mastermind}
 https://web.archive.org/web/20070812104420/http://dspace.dial.pipex.com/town/road/gbd76/toys.htm
 (Archived 2007)
+
+\bibitem {Pearls}
+Jeremy Gibbons,
+{\em University of Oxford, Functional Pearls}
+http://www.cs.ox.ac.uk/people/jeremy.gibbons/pearls/
+(2009)
+
+\bibitem {Sudoku}
+Richard Bird
+{\em Functional Pearl, A Program to Solve Sudoku}
+Cambridge University Press, Cambridge, 2006
+
 \end{thebibliography}
 \end{document}
