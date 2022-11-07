@@ -64,20 +64,20 @@ The main focus of this project is to investigate solutions to the puzzle game kn
 Mastermind is a simple code-breaking game in which one player will create a secret code which conists of four coloured pegs from a choice of six. This is the standard version of the game however there are multiple variations of the game, some of which will be discussed and examined within the scope of this project.
 
 \subsection {Aims and Objectives}
+The aims and objectives of this project can be surmised in two specific goals. The first goal is to derive a solution to the logical puzzle Mastermind. The second goal is to evaluate solutions implemented during this project with the aim to find methods to improve later iterations. An in depth explanation of the chosen aims and objectives are as such:
 \begin {itemize}
-
-\item{Aim 1: To derive a solution to Mastermind using logic and equational reasoning.}
+\item{Aim 1: To derive a solution to the puzzle Mastermind. The goal to find a solution to the problem which minimizes the number of guesses required to discover the correct combination of pegs which comprise the code. Intially the goal will be to derive a base solution to the Mastermind puzzle. The base solution being the most intuitive solution to the problem which does not aim to be the most efficient but to provide a foundation on which improvements can be made.}
 	\begin {itemize}
-	\item{Objective 1A: Investigate solutions to similar problems. This will give an idea of how an implementation should be approached.}
-	\item{Objective 1B:  Implement a base solution using simple logic without consideration to efficiency. This basic solution should only be concerned with giving a foundation that can be 		refined in later iterations.}
-	\item{Objective 1C: Iterate and improve on solutions using a declared evaluation process.}
+	\item{Objective 1.A: The Mastermind puzzle has previously been the subject of similar research regarding the ability to efficiently find the correct code combination. This stage of the project will concern itself with investigating these previous implementations to guide the project. Through exploring the methods utilised in other investigations into this problem the areas in which these solutions are lacking or could be improved can be found.}
+	\item{Objective 1.B:  The ideal base solution should acheive the basic goal of arriving at the correct code combination but should not be the most elegant solution at this point. Instead the base solution should be the foundation for which improvements are made in later iterations. The base solution will be guided through the research conducted through objective 1.A.}
+	\item{Objective 1.C: This objective is a continous process which will be referred to throughout the life cycle of the project. Each iteration of the solution, starting with the base solution, should be evaluation against a set of criteria defined later in the document. After this review possible improvements can be documented and worked towards for the next iteration.}
 	\end {itemize}
-Aim 2: Evaluate solutions and identify a desired solution.
+\item{Aim 2: The goal of this project is to arrive at a solution which can be evaluated in terms of its soundness and efficiency. This means that the solution should be one that is easily understood with the appropriate explanation. The steps in which the solution is arrived at should follow a logical progression that is reflected in its documentation. The efficiency should be measured through how quickly the correct code combination can be found by the solution.}
 	\begin {itemize}
-	\item{Objective 2A: Create an evaluation strategy by identifying which aspects of the solution would best show improvement between iterations.}
-	\item{Objective 2B: Analyse an iteration using the chosen strategy.}
-	\item{Objective 2C: Report the results of the evaluation strategy and iterate if improvements are identified.}
-	\item{Objective 2D: Document results taken to arrive at a desired solution.}
+	\item{Objective 2.A: Designing an evaluation process for this project should be foremost conernced with how well the solution is able to solve the problem. The Mastermind puzzle is most commonly restricted by the amount of guesses allowed to the player. From this the metric in which a solution should be measured against is how quickly the correct code combination can be found and its minimum amount of guesses to do so. A solution which does not reach the correct code combination within a set amount of allowed guesses will be considered a failed solution.}
+	\item{Objective 2.B: Analyse an iteration using the chosen strategy.}
+	\item{Objective 2.C: Report the results of the evaluation strategy and iterate if improvements are identified.}
+	\item{Objective 2.D: Document results taken to arrive at a desired solution.}   
 	\end {itemize}
 \end {itemize}
 
@@ -88,15 +88,34 @@ Aim 2: Evaluate solutions and identify a desired solution.
 
 \newpage                     % optional page break
 \section{Background}\label{ss:back}
-This section will provide background material which aims to give context to the aims and objectives of this project. What follows this brief introduction is an explanation of the game Mastermind which the solution will be derived from along with references to previous work by others. The previous work will relate to the field of functional programming and the specific area of logic and equational reasoning. At the conclusion of this section the goal is that the reader has an understanding of the important concepts relating to this project such that the aims and objectives are clear in their feasability and relevancy.
+
+This section will provide background material which aims to give context to the aims and objectives of this project. The project was inspired by a paper exploring sudoku solutions from a series of problems known as functional pearls, the processes used to derive those solutions will be used to guide this project in this current stage. Following this brief introduction is an explanation of the game Mastermind which the solution will be derived from along with references to previous work by others. The previous work will relate to the field of functional programming and the specific area of logic and equational reasoning. At the conclusion of this section the goal is that the reader has an understanding of the important concepts relating to this project such that the aims and objectives are clear in their feasability and relevancy.
+
+\subsection {Functional Pearls}
+The inspiration for this project was a paper by Richard Bird which implemented a solution to the puzzle game Sudoku as an example of a series of problems known as functional pearls. This sections will explore the topic of functional pearls and their relevance to the current project. Functional Pearls begin as small problems which programmers wish to explore, focusing on brief but engaging examples that showcase either a guided explanation to a proof or presenation of unique data structures. The goal of a functional pearl is to teach important programming techniques and fundamental design principles \cite{Pearls}.  Richard Bird described functional pearls in a speech as 'elegant, instructive exampels of functional programming' while showcasing his implementation of a sudoku solution\cite {R. Bird Speech}.
+
+The solution which this project aims to explore would enter the scope of a functional pearl due to its aim to document an example of functional programming. The project would however deviate from a traditional functional pearl as the scope would be expanded to consider similar solutions in the problem space to evaluate the different methods of solving Mastermind.
+
+The functional pearl which inspired the project is Richard Birds paper 'Functional Pearl: A Program to Solve Sudoku' \cite{Sudoku}. The aim of the solution was to define the function:
+
+\[ Sudoku :: Board \rightarrow [Board]\]
+
+This function would take an input in the form of a Sudoku board, represented by a matrix of characters, and output a list of possible completed boards. Following this declaration the paper would proceed to use logic and equational reasoning to define the function using the functional language haskell to achieve the solution. Finally Richard Bird was able to arrive at the following definition for his solution:
+
+\[ Sudoku :: Board \rightarrow [Board]\]
+\[ Sudoku = map (map head) \bullet search \bullet prune \bullet choices\]
+
+where search, prune and choices representing functions declared earlier in the implementation. This sudoku solutions provide an example of how the mastermind solution this project aimst to implement may be approached. Aiming for a solution that resembles this process of declaring an initial function or set of functions then deriving a defintion for them that can be evaluated through comparison with similar solutions. The next section will examine the problem that this project will aim to solve and the work that has been explored in the area previously.
+
 
 \subsection {Mastermind}
+
 % A brief history and explanation of the game
-Mastermind is a code-breaking board game designed by Mordecai Meirowitz originally manufactured by Invicta Toys and Games \cite{Invicta}. 
+The aim of this project is to deliver a solution to the code-breaking board game Mastermind designed by Mordecai Meirowitz and originally manufactured by Invicta Toys and Games \cite{Invicta}. 
 The original board game consisted of two players with different roles. Player A would be designated the code-breaker while Player B would attempt to solve the code.
 
-The process of the game is as follows.
-Player A would first contruct the code from a set of six coloured pegs with the code being exactly four pegs in length. There are variants where the size of the set of choices and code length are variable however this describes the standard variant.
+The game was designed around player A selecting a code unknown to player B and player B attempting to break the code.
+Player A would first construct the code from a set of six coloured pegs with the code being exactly four pegs in length. There are variants where the size of the set of choices and code length are variable however this describes the standard variant.
 
 A variant of the original mastermind puzzle was explored 
 
@@ -126,16 +145,52 @@ To provide a solution which is not bound by the number of elements within the se
 % Possible small note about variations and how these could change the goals
 A solution which is agnostic of the code length and number of possible elements would support basic variants of Mastermind where the only difference are these restrictions. The base solution will solely focus on solving for a code of length four with six possible elements.
 
-[This section should be extended with discussion of Clear Mastermind with focus paid to the foundation laid out by the researchers involved.
+\subsection {Donald Knuth's Solution}
 
-\subsection {Functional Pearls}
-% What are Functional Pearls and why introduce the concept
-The solution that this project seeks to implement will utilise functional programming to acheive its goals. This required an analysis of similar problems which have seen investigation in the field. An area which proves useful for this area of research is the topic of Functional Pearls.
+The computer scientist Donald E. Knuth proposed a solution to Master Mind in 1996 which focused on the strategy of minimzing the amount of possible enumerations for the code after each guess. While discussing this he used integers one through six to represent the six possible symbols for the code created by the "codemaker" noting that the total possible number of enumerations being equal to $6^2 = 1296$. 
 
-Functional Pearls are examples of programming which aim to teach important programming techniques and fundamental design principles \cite{Pearls}. Functional Pearls focus on brief but engaging examples that showcase either a guided explanation to a program calculation or proof or presenation of unique data structures. The encompassing feature of Functional Pearls is that they showcase educational material in a way that is digestable and entertaining.
+The first stage of Knuth's investigation was to define the rules of the game in a way that a computer would be able to understand. First defining the two important variables being the code $x_1 x_2 x_3 x_4$ and the test pattern, or guess, $y_1 y_2 y_3 y_4$ The initial rules that were derives were as follows:
+\begin {itemize}
+	\item {The number of "black hits", i.e., the number of positions j such that $x_j = y_i$}
+	\item {The number of "white hits", i.e, the number of positions j such that $x_j =! y_j but x_j = y_k$ for some k and $y_k$ which has not at this point been a hit.} \cite {Knuth}
+\end {itemize}
 
-% Are there any that would be relevant to this (Simple Sudoku Solver)
-A functional Pearl example which holds relevance to the current project is Richard Bird's 'A Program to Solve Sudoku' \cite{Sudoku}. This paper focused on using equational reasoning over mathematics to implement a solution to sudoku puzzles written in Haskell. This solution is relevant to the current project due to the factor they share similar problems of code breaking. The approach of this solution was to start with a base solution which would generate a large volume of possible boards which would be matched to a given input. The conclusion of the study resulted in an elegant solution which would apply equational reasoning to derive a function capable of giving multiple possible solutions to the given input. The limitations were compared to similar solutions which showed a struggle with larger inputs but an increase over other implementations with simplified board states.
+The next step involved defining variables $n_i$ as the number of times symbol i occurs within the codeword and $n'_i$ as the number of times it occurs within the guess for $1 \le i \le 6$. With these variables Knuth was able to define two rules which the computer could understand:
+
+\[1:	 min(n_1, n'_1) + min(n_2, n'_2) + ... + min(n_6, n'_6) \]
+
+for the total number of correct his, both white and black. From this it can be followed that the number of misses is
+
+\[2:	 min(n_1- n'_1, 0) + min(n_2- n'_2, 0) + ... + min(n_6- n'_6, 0) \]
+
+The algorithm that Knuth used would track the remaining possible codes after each test pattern was checked. This would allow Knuth to use the general rule of restricting the number of possible to arrive at the correct code while minimizing the amount of guesses required. Through this method Knuth asserted that it should be possible to achieve a correct guess within five test patterns. The starting pattern discovered by Knuth to give proof to this claim was found to be 1122. A possible progression of stages from this initial test pattern would be:
+
+\[ test \ pattern \ \ \ \  hits \ \ \ \  possbile \ combinations \]
+\[ 1122 \ \ \ \ WWW \ \ \ \  16 \]
+\[ 1213 \ \ \ \ BWW \ \ \ \  4 \]
+
+This idealistic situation would result in the next test pattern being able to distuingish from the final four possible combinations using the test pattern 1415.
+Another example is as follows:
+
+\[ test \ pattern \ \ \ \  hits \ \ \ \  possbile \ combinations \]
+\[ 1122 \ \ \ \ B \ \ \ \  256 \]
+\[ 1344 \ \ \ \ W \ \ \ \  44 \]
+\[ 3526 \ \ \ \ BWW \ \ \ \  7 \]
+
+This situation would also allow for the next test pattern to distuingish the final possible combinations using the test pattern 1462. The algorithm used to decide the progression from one test pattern to next decides based on the test pattern which is able to minimize the number of possible combinations. The algorithm selects the first test pattern such that there is no situation where the fourth test pattern is unable to distuingish the final remaining code combinations giving credit to Knuth's claim that the correct code can be ascertained within five guesses.
+
+This method of solving the problem however is admitted within the paper to not be the most optimal solution. This can be shown by the way that the algorithm processes the following situation:
+
+\[ test \ pattern \ \ \ \  hits\]
+\[ 1122 \ \ \ \ BWW\]
+\[ 1213 \ \ \ \ BB\]
+
+which results in a possible four remaining code words (2212, 4212, 5212, 6212). The algorithm would select the test pattern 1145 as the next guess however when compared to the test pattern 4222 it can be shown that it in actuality results in less distinguishing results:
+
+\[ 4222: \ \ BBW = 2212 \ \ BBB = 4212 \ \ BB = 5212 \ \ BB = 6212 \]
+\[ 1145: \ \ W = 2212 \ \ WW = 4212 \ \ WW = 5212 \ \ W = 6212 \]
+
+It is clear that should 4222 be used at the test pattern there are two possibilities in 2212 and 4212 where the code can be known by the third guess. This is a better result compared to the test pattern 1145 where two possibilities will always be the result.
 
 
 \subsection {Logic and Equational Reasoning}
@@ -150,6 +205,14 @@ The goal with the solution this project aims for is to implement a solution whic
 \newpage                     % optional page break
 \section{Evaluation Strategy}\label{ss:back}
 
+The evaluation strategy will be concerned mostly with trying to get the minimum amount of guesses within the allowed span of guesses.
+In here there will be further discussion of the attempts made in previous studies and their results.
+
+\newpage
+\section {Preliminary Work}
+
+In here talk about the work done with the current base solution. It will be originally done based on the donald knuth implementation.
+
 
 \newpage                     % optional page break
 \section{Project Management}\label{ss:back}
@@ -163,10 +226,22 @@ The goal with the solution this project aims for is to implement a solution whic
 To manage the progress of this project efficiently it was important to identify possible risks that could prevent the realisation of the goals laid out earlier in this document. To aid in the identification of the risks the following key was used to classify the associated risks:
 \begin{itemize}
 \item{People (P) - Risks which are the result of issues related to those individuals involved in the engineering of solutions.}
-\item{Technological (T) - Risks which result from the technology being used to engineer the solutions. This involves the software, hardware and frameworks used.}
-\item{Requirement (R)  - Risks which result from changes to the requirements of the project. Examples of such being a requirement being dropped from the scope or a requirements priority undergoing a change.}
+\item{Technological (T) - Risks which can result from the technology being used to engineer the solutions. This involves the software, hardware and frameworks used.}
+\item{Requirement (R)  - Risks which can result from changes to the requirements of the project. Examples of such being a requirement being dropped from the scope or a requirements priority undergoing a change.}
 \item{Estimation (E) - Risks which result from ill estimations of the project timing, capabilities of an individual or understanding of a certain technology.}
 \end{itemize}
+
+\begin{tabularx}{1.1\textwidth} {
+	|  >{\center\arraybackslash}X
+	| >{\center\arraybackslash}X
+	| >{\center\arraybackslash}X
+	| >{\center\arraybackslash} X | }
+	\hline
+	ID & Risk & Risk Type & Description \\
+	\hline
+	P/T/R/E1 & Textual Title of Risk & Class of Risk & Textual Description of the Risk \\
+	\hline
+\end{tabularx}
 
 \begin{tabularx}{1.1\textwidth} {
 	|  >{\center\arraybackslash}X
@@ -230,13 +305,13 @@ To manage the progress of this project efficiently it was important to identify 
 %http://arxiv.org/abs/1102.2073                       % URL
 %(2011).                                              % (year)
 
-\bibitem {Invicta}
-Invicta Toys and Games ltd,
-{\em History of Mastermind}
-https://web.archive.org/web/20070812104420/http://dspace.dial.pipex.com/town/road/gbd76/toys.htm
-(Archived 2007)
-
 \bibitem {Pearls}
+Richard Bird,
+{\em How to Write a Functional Pearl}
+International Conference on Functional Programming, Portland
+(2006)
+
+\bibitem {R. Bird Speech}
 Jeremy Gibbons,
 {\em University of Oxford, Functional Pearls}
 http://www.cs.ox.ac.uk/people/jeremy.gibbons/pearls/
@@ -246,6 +321,19 @@ http://www.cs.ox.ac.uk/people/jeremy.gibbons/pearls/
 Richard Bird
 {\em Functional Pearl, A Program to Solve Sudoku}
 Cambridge University Press, Cambridge, 2006
+
+\bibitem {Invicta}
+Invicta Toys and Games ltd,
+{\em History of Mastermind}
+https://web.archive.org/web/20070812104420/http://dspace.dial.pipex.com/town/road/gbd76/toys.htm
+(Archived 2007)
+
+\bibitem {Knuth}
+Donald E. Knuth,
+The Computer as Master Mind
+{\em Recreational Mathematics}
+{\bf 9(1)}
+(1976)
 
 \end{thebibliography}
 \end{document}
