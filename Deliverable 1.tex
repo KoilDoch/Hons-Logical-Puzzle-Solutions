@@ -202,11 +202,21 @@ The goal with the solution this project aims for is to implement a solution whic
 \newpage                     % optional page break
 \section{Research Methodology}\label{ss:back}
 
+The question that this project aims to answer is 'How can the combinatorial problem of Mastermind be solved'. The scope of this question is quite large so instead it will be broken down into a set of smaller questions that will help to define the research methodology. Those questions are as such:
+\begin {itemize}
+	\item {How can the search space of consistent combinations be minimized}
+	\item {Which scoring algorithms provide the best possible chance of selecting the correct code from a set of consistent solutions.}
+\end {itemize}
+
 \newpage                     % optional page break
 \section{Evaluation Strategy}\label{ss:back}
 
-The evaluation strategy will be concerned mostly with trying to get the minimum amount of guesses within the allowed span of guesses.
-In here there will be further discussion of the attempts made in previous studies and their results.
+The evaluation of the solutions implemented in this project relate strongly to the research questions that we have defined in the previous section. Following from this means that the metrics on which our solutions will be evaluated on are as such:
+\begin {itemize}
+	\item {A solution which is able to restrict the consistent combination search space is considered more valuable.}
+	\item {A solution which is more accurate in selecting the correct code from the consistent search space is more valuable.}
+	\item {A solution which is able to scale elegantly with both an increase in possible symbols which comprise the code and an increase in the length of the code.}
+\end{itemize}
 
 \newpage
 \section {Preliminary Work}
