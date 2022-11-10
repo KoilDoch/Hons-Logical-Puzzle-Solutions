@@ -4,6 +4,7 @@
 \usepackage[document]{ragged2e} 
 \usepackage{float}
 \usepackage{tabularx}
+\usepackage{multirow}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -89,7 +90,110 @@ The aims and objectives of this project can be surmised in two specific goals. T
 \newpage                     % optional page break
 \section{Background}\label{ss:back}
 
-This section will provide background material which aims to give context to the aims and objectives of this project. The project was inspired by a paper exploring sudoku solutions from a series of problems known as functional pearls, the processes used to derive those solutions will be used to guide this project in this current stage. Following this brief introduction is an explanation of the game Mastermind which the solution will be derived from along with references to previous work by others. The previous work will relate to the field of functional programming and the specific area of logic and equational reasoning. At the conclusion of this section the goal is that the reader has an understanding of the important concepts relating to this project such that the aims and objectives are clear in their feasability and relevancy.
+% Summary of the background material and introduction to the section
+This section will provide background material which aims to give context to the aims and objectives of this project. The project was inspired by a paper exploring sudoku solutions from a series of problems known as functional pearls, the processes used to derive those solutions will be used to guide this project in this current stage. Following this brief introduction is an explanation of the game Mastermind which the solution will be derived from along with references to previous work by others. The previous work examined will focus on the specific area of search spaces in regards to finding the optimal best move at each position in the puzzle. At the conclusion of this section the goal is that the reader has an understanding of the important concepts relating to this project such that the aims and objectives are clear in their feasability and relevancy.
+
+%%% What is the problem?
+% What is the goal of Mastermind that our solution will be modelled on?
+\subsection {Mastermind}
+
+% A brief history and explanation of the game
+Mastermind is a two-player code-breaking game centered around a code-maker (CM) who creates a secret code and a code-breaker (CB) who attempts to discover the code \cite{Wolfram}.The physical board game was designed by an Isreali Postmaster named Mordecai Meirowitz and originally manufactured by Invicta Toys and Games \cite{Invicta}. 
+
+% Explanation of Mastermind puzzle
+The standard variant of the game plays as follows:
+\begin {itemize}
+	\item {The $CM$ will create a secret code of length $L$ unknown to $CB$ from a set of symbols $S$, in the physical game these were represented by plastic pegs. In the standard variant $L=4$ and $S=6$  represents a code of four symbols in length constructed from a set of six possible symbols.}
+	\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.75]{pegs}
+	\caption{ Example of code enumerations the $CM$ could construct in the standard variant.}
+	\end{figure}
+	\item {The $CB$ is tasked with solving the code that the $CM$ has constructed by creating test patterns from $S$. In the physical board game the number of guesses that the $CB$ is allowed is limited to 10 \cite {Nelson}, the size of the plastic board. The test patterns are evaluated by $CM$ through a pair of indicators. The first indicator, represented by a white plastic peg in the physical game, denotes that a correct symbol was used but in an incorrect position. The second indicator, represented by a black plastic peg, denotes that a correct symbol was used in the correct position.}
+	\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.75]{guesses}
+	\caption{A simplified representation of $CB$ attempting to break the code set by $CM$}
+	\end{figure}
+	\item {The game concludes when either the $CB$ is able to correctly guess the code set by the $CM$ or they exceed the allowed number of guesses.}
+\end {itemize}
+
+% Why is a solution to this problem important?
+The game can be treated as a individual puzzle in the absence of a human $CM$ through randomly generated code combinations. This project aims to implement a solution to this puzzle that can search for the correct code combination that is comparable with exisiting solutions. The act of searching for the correct code in this context is known as a combinatorial optimization problem with a wide range of applications \cite{Haystack} and it is because of this applicability that the search for a solution is subject to continued investigation.
+
+%%% Search Algorithms
+% Which similar problems exist?
+
+\subsection {Donald Knuth's Solution and Search Spaces}
+\par One of the earliest proposed solutions to the Mastermind puzzle was a paper by Donald E. Knuth in which the claim is made that it is possible in all cases for the $CB$ to find the correct code within five attempts \cite {Wolfram} \cite {Knuth}. The solution introduces a concept which is important to solving search problems known as the \emph{consistent search space}, a term which would be defined further in later work \cite{Merelo}. The standard variant of Mastermind assumes that the code is of length four with six possible elements it can be constructed from. This definition would mean the code constructed by the $CM$ would be one of $6^4 = 1296$ possible combinations, this set of combinations is referred to as the \emph search space of the puzzle. 
+
+\par The algorithm that Knuth proposes seeks to restrict this search space after each guess using the feedback provided by the $CM$. The algorithm proceeds after each guess by picking the best possible choice for the subsequent guess at each step, this greedy strategy \cite {Wolfram} is possible as the feedback provided can eliminate combinations which are not consistent with previously guesses. 
+
+\par The first stage of Knuth's investigation was to define the rules of the game in a way that a computer would be able to understand. First defining the two important variables being the code $x_1 x_2 x_3 x_4$ and the test pattern, or guess, $y_1 y_2 y_3 y_4$ The initial rules that were derived were as follows:
+\begin {itemize}
+	\item {The number of "black hits (B)", i.e., the number of positions j such that $x_j = y_i$}
+	\item {The number of "white hits (W)", i.e, the number of positions j such that $x_j =! y_j \  but \ x_j = y_k$ for some k and $y_k$ which has not at this point been a hit.} \cite {Knuth}
+\end {itemize}
+
+The process of restricting the search space can be seen in the example below with the symbols represented as integers (1, 2, 3, 4, 5, 6):
+\\
+{
+\centering
+\begin{tabular}{cccc}
+No. of Guesses & Test Pattern &  Hits  & Possible Combinations \\
+0 & no guess & N/A & 1296 \\
+1 & 1122 &  WWW  &  16 \\
+2 & 1213 &  BWW  &  4 \\
+\end {tabular} \par 
+} 
+At the initial point where no guess had been made the search space is still comprised of all 1296 possible code combinations. This space of possible combinations is restricted using the result of the first guess which states that three of the chosen symbols were correct however their positions were incorrect. This information allows a great amount of restriction to only 16 possible code combinations which the code could belong to. The second guess restricting this space even further to just four possible combinations. Through this method Knuth asserted that it should be possible to achieve a correct guess within five test patterns. The starting pattern discovered by Knuth to give proof to this claim was found to be 1122. A possible progression of stages from this initial test pattern would be:
+Another example is as follows:
+\\
+{
+\centering
+\begin{tabular}{cccc}
+No. of Guesses & Test Pattern &  Hits  & Possible Combinations \\
+0 & no guess & N/A & 1296 \\
+1 & 1122 &  B  &  256 \\
+2 & 1344 &  W  &  44 \\
+1 & 3526 &  W  &  7 \\
+\end {tabular} \par 
+}
+This situation would also allow for the next test pattern to distuingish the final possible combinations using the test pattern 1462. The algorithm places a high value on test patterns which coax the process towards the fourth guess being able to distinguish between the possible combinations. This method of solving the problem however is admitted within the paper to not be the most optimal solution. This can be shown by the way that the algorithm processes the following situation:
+\\
+{
+\centering
+\begin{tabular}{cccc}
+No. of Guesses & Test Pattern &  Hits  & Possible Combinations \\
+0 & no guess & N/A & 1296 \\
+1 & 1122 &  BWW  &  16 \\
+2 & 1213 &  BB  &  4 \\
+\end {tabular} \par 
+} 
+
+which results in a possible four remaining code words (2212, 4212, 5212, 6212). The algorithm would select the test pattern 1145 as the next guess however when compared to the test pattern 4222 it can be shown that it in actuality results in less distinguishing results:
+\\
+{
+\centering
+\begin{tabular}{ccc}
+Test Pattern          & Hits & Code  \\ \hline
+\multirow{4}{*}{4222} & BWW  & 2212  \\
+                      & BBB  & 4212  \\
+                      & BB   & 5212  \\
+                      & BB   & 62122 \\ \hline
+\multirow{4}{*}{1145} & W    & 2212  \\
+                      & WW   & 4212  \\
+                      & WW   & 5212  \\
+                      & W    & 62122
+\end{tabular} \par
+} 
+
+It is clear that should 4222 be used at the test pattern there are two possibilities in 2212 and 4212 where the code can be known by the third guess. This is a better result compared to the test pattern 1145 where two possibilities will always be the result.
+
+\subsection {Scoring Algorithms in Heuristics / Scoring Possible Combinations}
+%%% Where is progress currently
+% Donald Knuth's implementation
+% Exhaustive Solutions - Most Parts, Entropy, plus & plus2
 
 \subsection {Functional Pearls}
 The inspiration for this project was a paper by Richard Bird which implemented a solution to the puzzle game Sudoku as an example of a series of problems known as functional pearls. This sections will explore the topic of functional pearls and their relevance to the current project. Functional Pearls begin as small problems which programmers wish to explore, focusing on brief but engaging examples that showcase either a guided explanation to a proof or presenation of unique data structures. The goal of a functional pearl is to teach important programming techniques and fundamental design principles \cite{Pearls}.  Richard Bird described functional pearls in a speech as 'elegant, instructive exampels of functional programming' while showcasing his implementation of a sudoku solution\cite {R. Bird Speech}.
@@ -107,102 +211,11 @@ This function would take an input in the form of a Sudoku board, represented by 
 
 where search, prune and choices representing functions declared earlier in the implementation. This sudoku solutions provide an example of how the mastermind solution this project aimst to implement may be approached. Aiming for a solution that resembles this process of declaring an initial function or set of functions then deriving a defintion for them that can be evaluated through comparison with similar solutions. The next section will examine the problem that this project will aim to solve and the work that has been explored in the area previously.
 
-
-\subsection {Mastermind}
-
-% A brief history and explanation of the game
-The aim of this project is to deliver a solution to the code-breaking board game Mastermind designed by Mordecai Meirowitz and originally manufactured by Invicta Toys and Games \cite{Invicta}. 
-The original board game consisted of two players with different roles. Player A would be designated the code-breaker while Player B would attempt to solve the code.
-
-The game was designed around player A selecting a code unknown to player B and player B attempting to break the code.
-Player A would first construct the code from a set of six coloured pegs with the code being exactly four pegs in length. There are variants where the size of the set of choices and code length are variable however this describes the standard variant.
-
-A variant of the original mastermind puzzle was explored 
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.75]{pegs}
-\caption{ Example of code enumerations Player A could construct}
-\end{figure}
-
-The challenge for Player B is to correctly guess the code created by considering feedback given from Player A relating to how correct each guess was.
-A guess is evaluated with Player B given a number of pegs with two possible colours, one which represents a correct position and another which represents a correct colour.
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.75]{guesses}
-\caption{ Simplified example of Player B guesses}
-\end{figure}
-
-% A reiteration of the goals with this context
-\par The solution that this project aims to implement would assume the role of Player B attempting to correctly identify the generated code in the minimum number of guesses.
-To provide a solution which is not bound by the number of elements within the set of possible choices or the length of the code, the code will follow the following rules.
-
-\[ code = [c_i, ... ,c_n]\]
-\[pegs = \{c_i, ... , c_m\}\]
-\[ n,m = \mathbb{N} > 1\]
-
-% Possible small note about variations and how these could change the goals
-A solution which is agnostic of the code length and number of possible elements would support basic variants of Mastermind where the only difference are these restrictions. The base solution will solely focus on solving for a code of length four with six possible elements.
-
-\subsection {Donald Knuth's Solution}
-
-The computer scientist Donald E. Knuth proposed a solution to Master Mind in 1996 which focused on the strategy of minimzing the amount of possible enumerations for the code after each guess. While discussing this he used integers one through six to represent the six possible symbols for the code created by the "codemaker" noting that the total possible number of enumerations being equal to $6^2 = 1296$. 
-
-The first stage of Knuth's investigation was to define the rules of the game in a way that a computer would be able to understand. First defining the two important variables being the code $x_1 x_2 x_3 x_4$ and the test pattern, or guess, $y_1 y_2 y_3 y_4$ The initial rules that were derives were as follows:
-\begin {itemize}
-	\item {The number of "black hits", i.e., the number of positions j such that $x_j = y_i$}
-	\item {The number of "white hits", i.e, the number of positions j such that $x_j =! y_j but x_j = y_k$ for some k and $y_k$ which has not at this point been a hit.} \cite {Knuth}
-\end {itemize}
-
-The next step involved defining variables $n_i$ as the number of times symbol i occurs within the codeword and $n'_i$ as the number of times it occurs within the guess for $1 \le i \le 6$. With these variables Knuth was able to define two rules which the computer could understand:
-
-\[1:	 min(n_1, n'_1) + min(n_2, n'_2) + ... + min(n_6, n'_6) \]
-
-for the total number of correct his, both white and black. From this it can be followed that the number of misses is
-
-\[2:	 min(n_1- n'_1, 0) + min(n_2- n'_2, 0) + ... + min(n_6- n'_6, 0) \]
-
-The algorithm that Knuth used would track the remaining possible codes after each test pattern was checked. This would allow Knuth to use the general rule of restricting the number of possible to arrive at the correct code while minimizing the amount of guesses required. Through this method Knuth asserted that it should be possible to achieve a correct guess within five test patterns. The starting pattern discovered by Knuth to give proof to this claim was found to be 1122. A possible progression of stages from this initial test pattern would be:
-
-\[ test \ pattern \ \ \ \  hits \ \ \ \  possbile \ combinations \]
-\[ 1122 \ \ \ \ WWW \ \ \ \  16 \]
-\[ 1213 \ \ \ \ BWW \ \ \ \  4 \]
-
-This idealistic situation would result in the next test pattern being able to distuingish from the final four possible combinations using the test pattern 1415.
-Another example is as follows:
-
-\[ test \ pattern \ \ \ \  hits \ \ \ \  possbile \ combinations \]
-\[ 1122 \ \ \ \ B \ \ \ \  256 \]
-\[ 1344 \ \ \ \ W \ \ \ \  44 \]
-\[ 3526 \ \ \ \ BWW \ \ \ \  7 \]
-
-This situation would also allow for the next test pattern to distuingish the final possible combinations using the test pattern 1462. The algorithm used to decide the progression from one test pattern to next decides based on the test pattern which is able to minimize the number of possible combinations. The algorithm selects the first test pattern such that there is no situation where the fourth test pattern is unable to distuingish the final remaining code combinations giving credit to Knuth's claim that the correct code can be ascertained within five guesses.
-
-This method of solving the problem however is admitted within the paper to not be the most optimal solution. This can be shown by the way that the algorithm processes the following situation:
-
-\[ test \ pattern \ \ \ \  hits\]
-\[ 1122 \ \ \ \ BWW\]
-\[ 1213 \ \ \ \ BB\]
-
-which results in a possible four remaining code words (2212, 4212, 5212, 6212). The algorithm would select the test pattern 1145 as the next guess however when compared to the test pattern 4222 it can be shown that it in actuality results in less distinguishing results:
-
-\[ 4222: \ \ BBW = 2212 \ \ BBB = 4212 \ \ BB = 5212 \ \ BB = 6212 \]
-\[ 1145: \ \ W = 2212 \ \ WW = 4212 \ \ WW = 5212 \ \ W = 6212 \]
-
-It is clear that should 4222 be used at the test pattern there are two possibilities in 2212 and 4212 where the code can be known by the third guess. This is a better result compared to the test pattern 1145 where two possibilities will always be the result.
-
-
-\subsection {Logic and Equational Reasoning}
-% Discussion of what a logical approach to programming would be
-The goal with the solution this project aims for is to implement a solution which is logically sound. This means for the project to succeed
-
-% Equational Reasoning vs Maths
-
 \newpage                     % optional page break
 \section{Research Methodology}\label{ss:back}
 
 The question that this project aims to answer is 'How can the combinatorial problem of Mastermind be solved'. The scope of this question is quite large so instead it will be broken down into a set of smaller questions that will help to define the research methodology. Those questions are as such:
+
 \begin {itemize}
 	\item {How can the search space of consistent combinations be minimized}
 	\item {Which scoring algorithms provide the best possible chance of selecting the correct code from a set of consistent solutions.}
@@ -318,35 +331,61 @@ To manage the progress of this project efficiently it was important to identify 
 %http://arxiv.org/abs/1102.2073                       % URL
 %(2011).                                              % (year)
 
+\bibitem {Wolfram}
+Weisstein, Eric W.
+{\em '"Mastermind." From Mathworld -- A Wolfram Web Resource'}
+https://mathworld.wolfram.com/Mastermind.html
+(Online; accessed 9-November-2022)
+
+\bibitem {Invicta}
+Invicta Toys and Games ltd.
+{\em 'History of Mastermind'}
+https://web.archive.org/web/20070812104420/http://dspace.dial.pipex.com/town/road/gbd76/toys.htm
+(Archived 2007)
+
+\bibitem {Nelson}
+Nelson, Toby.
+{\em 'Investigations into the Master Mind Board Game'}
+https://web.archive.org/web/20150906043015/http://www.tnelson.demon.co.uk/mastermind/index.html
+(1999, Archived 2015)
+
+\bibitem {Haystack}
+Merelo-Guervós, J.J., Castillo, P. and Rivas, V.M. 
+{\em ‘Finding a needle in a haystack using hints and evolutionary computation: the case of evolutionary MasterMind’, Applied soft computing}
+{\bf  6(2)}
+(2006) pp. 170–179. 
+doi:10.1016/j.asoc.2004.09.003.
+
+\bibitem {Knuth}
+Knuth, Donald E. 
+{\em 'The Computer as Master Mind', Recreational Mathematics}
+{\bf 9(1)}
+Stanford University
+(1976, Baywood Publishing Co., Inc.)
+
+\bibitem {Merelo}
+ Merelo, J.J., Mora, A.M., Cotta, C. and Runarsson, T.P. 
+{\em ‘An experimental study of exhaustive solutions for the Mastermind puzzle’.}
+(2012) 
+
 \bibitem {Pearls}
-Richard Bird,
+Bird, Richard.
 {\em How to Write a Functional Pearl}
 International Conference on Functional Programming, Portland
 (2006)
 
 \bibitem {R. Bird Speech}
-Jeremy Gibbons,
+Gibbons, Jeremy.
 {\em University of Oxford, Functional Pearls}
 http://www.cs.ox.ac.uk/people/jeremy.gibbons/pearls/
 (2009)
 
 \bibitem {Sudoku}
-Richard Bird
+Bird, Richard.
 {\em Functional Pearl, A Program to Solve Sudoku}
 Cambridge University Press, Cambridge, 2006
 
-\bibitem {Invicta}
-Invicta Toys and Games ltd,
-{\em History of Mastermind}
-https://web.archive.org/web/20070812104420/http://dspace.dial.pipex.com/town/road/gbd76/toys.htm
-(Archived 2007)
 
-\bibitem {Knuth}
-Donald E. Knuth,
-The Computer as Master Mind
-{\em Recreational Mathematics}
-{\bf 9(1)}
-(1976)
 
 \end{thebibliography}
 \end{document}
