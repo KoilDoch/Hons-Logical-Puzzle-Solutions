@@ -129,11 +129,24 @@ This is a continual objective which encapsulates the main goal of this aim. Meas
 
 \
 
-\textbullet\ Objective 3.A: Design and Evaluation Process.
+This aim constitutes the final stages of the project. During this stage a final solution should be implementation with appropriate reasoning as to the optimizations which will be compared to already existing solutions. The comparison process should provide insight into the areas which could still be optimized.
 
 \
 
-\textbullet\ Objective 3.B: Evaluate the New Solution in the Context of Existing Research.
+\textbullet\ Objective 3.A: Design an Evaluation Process.
+
+\
+
+The evaluation process should consider the optimization methods implemented during the development of each solution iteration. It is important that the evaluation process considers factors in which the solution can be compared to similar solutions as to provide reasoning for why one solution may be an improvement over another
+This objective is covered in the Evaluation Strategy chapter later in this report
+
+\
+
+\textbullet\ Objective 3.B: Present the Results of the Evaluation Process.
+
+\
+
+The evaluation process provides insight in how an optimization procedure may have given one solution an advantage over a similar implementation. The results of the process should be communicated clearly such that these insights can be reasoned and explained.
 
 \
 
@@ -141,7 +154,15 @@ This is a continual objective which encapsulates the main goal of this aim. Meas
 
 \
 
+This aim and its associated objectives are intended to be goals which are desired to be included with the results of the project but are not fundamental to the investigation. These objectives should be pursued if the time allows for these areas to be explored. The topic of investigation for this aim is to explore how variations of the Mastermind puzzle can be processed by the solution implemented in this project. Possible optimization methods in respect to these changes should be documented and communicated alongside the challenges encountered.
+
+\
+
 \textbullet\ Objective 4.A: Investigate Solution with Variance in Set Size for Possible Symbols.
+
+\
+
+A topic that is a recurring source of intrigue with similar research into the Mastermind puzzle is the potential for a solution to scale with changes in the way that the code is constructed. One such change relates to the possible set of symbols which the code could contain. This objective should consider methods of how the solution can adapt when the number of possible symbol increases above the standard six.
 
 \
 
@@ -149,18 +170,15 @@ This is a continual objective which encapsulates the main goal of this aim. Meas
 
 \
 
+An additional scaling factor which is an area of possible investigation is changes in the length of the code. The considerations regarding this objective relate to the ways in how a solution will handle the larger search space and the changes in optimization.
+
+\
+
 \textbullet\ Objective 4.C: Investigate Solutions to Similar Problems.
 
+\
 
-
-{Aim 2: The goal of this project is to arrive at a solution which can be evaluated in terms of its soundness and efficiency. This means that the solution should be one that is easily understood with the appropriate explanation. The steps in which the solution is arrived at should follow a logical progression that is reflected in its documentation. The efficiency should be measured through how quickly the correct code combination can be found by the solution.}
-
-{Objective 2.A: Designing an evaluation process for this project should be foremost conernced with how well the solution is able to solve the problem. The Mastermind puzzle is most commonly restricted by the amount of guesses allowed to the player. From this the metric in which a solution should be measured against is how quickly the correct code combination can be found and its minimum amount of guesses to do so. A solution which does not reach the correct code combination within a set amount of allowed guesses will be considered a failed solution.}
-{Objective 2.B: Analyse an iteration using the chosen strategy.}
-{Objective 2.C: Report the results of the evaluation strategy and iterate if improvements are identified.}
-{Objective 2.D: Document results taken to arrive at a desired solution.}   
-
-
+The solution implemented in this project could have applications beyond the intial Mastermind puzzle. This objective is concerned with how the solution can be applied to other similar problems, an example of such a puzzle would be the popular language game Wordle \cite{Wordle}.
 
 %
 % The \label command is optional, but useful.  To cross-refer to a section/theorem/equation etc.
@@ -211,7 +229,7 @@ The game can be treated as a individual puzzle in the absence of a human $CM$ th
 \par The first stage of Knuth's investigation was to define the rules of the game in a way that a computer would be able to understand. First defining the two important variables being the code $x_1 x_2 x_3 x_4$ and the test pattern, or guess, $y_1 y_2 y_3 y_4$ The initial rules that were derived were as follows:
 \begin {itemize}
 	\item {The number of "black hits (B)", i.e., the number of positions j such that $x_j = y_i$}
-	\item {The number of "white hits (W)", i.e, the number of positions j such that $x_j =! y_j \  but \ x_j = y_k$ for some k and $y_k$ which has not at this point been a hit.} \cite {Knuth}
+	\item {The number of "white hits (W)", i.e, the number of positions j such that $x_j =! y_j \  but \ x_j = y_k$ for some k and $y_k$ which has not at this point been a hit \cite {Knuth}.}
 \end {itemize}
 
 The process of restricting the search space can be seen in the example below with the symbols represented as integers (1, 2, 3, 4, 5, 6):
@@ -412,6 +430,12 @@ To manage the progress of this project efficiently it was important to identify 
 %{\em Generalised triangle groups of type $(3,5,2)$}, % article name - italics
 %http://arxiv.org/abs/1102.2073                       % URL
 %(2011).                                              % (year)
+
+\bibitem {Wordle}
+New York Times,
+{\em "Wordle"}
+https://www.nytimes.com/games/wordle/index.html
+(Online, accessed 21-11-2022)
 
 \bibitem {Wolfram}
 Weisstein, Eric W.
