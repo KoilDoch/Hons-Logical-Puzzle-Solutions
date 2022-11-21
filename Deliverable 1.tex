@@ -37,7 +37,7 @@
 %
 %        Preamble material specific to your essay
 %
-\title{Logic-Based Solutions to Puzzles and Riddles\\
+\title{Evaluation of Mastermind Solutions\\
 Deliverable 1: Research Report}
 \author{Kyle Dick\\
 F20PA Project\\
@@ -62,25 +62,51 @@ Describe the problem that is to be approached.
 %
 %In recent times a global interest has developed around the linguistic game Wordle. The concept of this puzzle is simple, the user is to guess a five letter word in as few guesses as possible within six attempts. After each guess the computer will inform the user if a letter was in the correct position, denoted as a green highlight, or is contained within the word but not in the correct %position, denoted with a yellow highlight.
 The main focus of this project is to investigate solutions to the puzzle game known as Mastermind. The approach will be to develop an initial base solution in a functional programming language which can be iteratively improved with the goal of creating a solution which is logically sound and efficient.
-Mastermind is a simple code-breaking game in which one player will create a secret code which conists of four coloured pegs from a choice of six. This is the standard version of the game however there are multiple variations of the game, some of which will be discussed and examined within the scope of this project.
+Mastermind is a simple code-breaking game in which one player will create a secret code which consists of four coloured pegs from a choice of six. This is the standard version of the game however there are multiple variations of the game, some of which will be discussed and examined within the scope of this project.
 
 \subsection {Aims and Objectives}
 The aims and objectives of this project can be surmised in two specific goals. The first goal is to derive a solution to the logical puzzle Mastermind. The second goal is to evaluate solutions implemented during this project with the aim to find methods to improve later iterations. An in depth explanation of the chosen aims and objectives are as such:
-\begin {itemize}
-\item{Aim 1: To derive a solution to the puzzle Mastermind. The goal to find a solution to the problem which minimizes the number of guesses required to discover the correct combination of pegs which comprise the code. Intially the goal will be to derive a base solution to the Mastermind puzzle. The base solution being the most intuitive solution to the problem which does not aim to be the most efficient but to provide a foundation on which improvements can be made.}
-	\begin {itemize}
-	\item{Objective 1.A: The Mastermind puzzle has previously been the subject of similar research regarding the ability to efficiently find the correct code combination. This stage of the project will concern itself with investigating these previous implementations to guide the project. Through exploring the methods utilised in other investigations into this problem the areas in which these solutions are lacking or could be improved can be found.}
-	\item{Objective 1.B:  The ideal base solution should acheive the basic goal of arriving at the correct code combination but should not be the most elegant solution at this point. Instead the base solution should be the foundation for which improvements are made in later iterations. The base solution will be guided through the research conducted through objective 1.A.}
-	\item{Objective 1.C: This objective is a continous process which will be referred to throughout the life cycle of the project. Each iteration of the solution, starting with the base solution, should be evaluation against a set of criteria defined later in the document. After this review possible improvements can be documented and worked towards for the next iteration.}
-	\end {itemize}
-\item{Aim 2: The goal of this project is to arrive at a solution which can be evaluated in terms of its soundness and efficiency. This means that the solution should be one that is easily understood with the appropriate explanation. The steps in which the solution is arrived at should follow a logical progression that is reflected in its documentation. The efficiency should be measured through how quickly the correct code combination can be found by the solution.}
-	\begin {itemize}
-	\item{Objective 2.A: Designing an evaluation process for this project should be foremost conernced with how well the solution is able to solve the problem. The Mastermind puzzle is most commonly restricted by the amount of guesses allowed to the player. From this the metric in which a solution should be measured against is how quickly the correct code combination can be found and its minimum amount of guesses to do so. A solution which does not reach the correct code combination within a set amount of allowed guesses will be considered a failed solution.}
-	\item{Objective 2.B: Analyse an iteration using the chosen strategy.}
-	\item{Objective 2.C: Report the results of the evaluation strategy and iterate if improvements are identified.}
-	\item{Objective 2.D: Document results taken to arrive at a desired solution.}   
-	\end {itemize}
-\end {itemize}
+
+\
+
+\textbullet\ Aim 1: To derive a solution to the puzzle Mastermind.
+
+\
+
+ The goal to find a solution to the problem which minimizes the number of guesses required to discover the correct combination of pegs which comprise the code. Intially the goal will be to derive a base solution to the Mastermind puzzle. The base solution being the most intuitive solution to the problem which does not aim to be the most efficient but to provide a foundation on which improvements can be made. The following objectives are associated with this aim:
+
+\
+
+\textbullet\ Objective 1.A: Investigate the problem space.
+
+\
+
+The Mastermind puzzle has previously been the subject of similar research regarding the ability to efficiently find the correct code combination. This stage of the project will concern itself with investigating these previous implementations to guide the project. Through exploring the methods utilised in other investigations into this problem the areas in which these solutions are lacking or could be improved can be found.
+
+\
+
+\textbullet\ Objective 1.B:  Implement a base solution.
+
+\
+
+The ideal base solution should acheive the basic goal of arriving at the correct code combination but should not be the most elegant solution at this point. Instead the base solution should be the foundation for which improvements are made in later iterations. The base solution will be guided through the research conducted through objective 1.A.
+
+\
+
+\textbullet\ Objective 1.C: Evaluate implementation and iterate.
+
+\
+
+This objective is a continous process which will be referred to throughout the life cycle of the project. Each iteration of the solution, starting with the base solution, should be evaluation against a set of criteria defined later in the document. After this review possible improvements can be documented and worked towards for the next iteration.
+
+
+{Aim 2: The goal of this project is to arrive at a solution which can be evaluated in terms of its soundness and efficiency. This means that the solution should be one that is easily understood with the appropriate explanation. The steps in which the solution is arrived at should follow a logical progression that is reflected in its documentation. The efficiency should be measured through how quickly the correct code combination can be found by the solution.}
+
+{Objective 2.A: Designing an evaluation process for this project should be foremost conernced with how well the solution is able to solve the problem. The Mastermind puzzle is most commonly restricted by the amount of guesses allowed to the player. From this the metric in which a solution should be measured against is how quickly the correct code combination can be found and its minimum amount of guesses to do so. A solution which does not reach the correct code combination within a set amount of allowed guesses will be considered a failed solution.}
+{Objective 2.B: Analyse an iteration using the chosen strategy.}
+{Objective 2.C: Report the results of the evaluation strategy and iterate if improvements are identified.}
+{Objective 2.D: Document results taken to arrive at a desired solution.}   
+
 
 
 %
@@ -212,8 +238,11 @@ This function would take an input in the form of a Sudoku board, represented by 
 where search, prune and choices representing functions declared earlier in the implementation. This sudoku solutions provide an example of how the mastermind solution this project aimst to implement may be approached. Aiming for a solution that resembles this process of declaring an initial function or set of functions then deriving a defintion for them that can be evaluated through comparison with similar solutions. The next section will examine the problem that this project will aim to solve and the work that has been explored in the area previously.
 
 \newpage                     % optional page break
-\section{Research Methodology}\label{ss:back}
+\section{Research Methodology and Requirements Analysis}\label{ss:back}
 
+The process of implementing a solution to Mastermind should consider the specifics of how the solution will be optimized. The problem space of solutions to Mastermind puzzles has been explored in multiple over investigations which necessitates that the requirements for this implementation be clearly defined and exhaustive. Guiding the declaration of how the solution should function are the set of research questions which state the purpose of the solution and what it hopes to accomplish.
+
+\subsection {Research Methodology}
 The question that this project aims to answer is 'How can the combinatorial problem of Mastermind be solved'. The scope of this question is quite large so instead it will be broken down into a set of smaller questions that will help to define the research methodology. Those questions are as such:
 
 \begin {itemize}
