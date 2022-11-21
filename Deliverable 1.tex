@@ -81,7 +81,7 @@ The aims and objectives of this project can be surmised in two specific goals. T
 
 \
 
-The Mastermind puzzle has previously been the subject of similar research regarding the ability to efficiently find the correct code combination. This stage of the project will concern itself with investigating these previous implementations to guide the project. Through exploring the methods utilised in other investigations into this problem the areas in which these solutions are lacking or could be improved can be found.
+The Mastermind puzzle has previously been the subject of similar research regarding the ability to efficiently find the correct code combination. This stage of the project will concern itself with investigating these previous implementations to guide the project. Through exploring the methods utilised in other investigations into this problem the areas in which these solutions are lacking or could be improved can be found. The research presented in this report represents the progress of this objective.
 
 \
 
@@ -93,11 +93,64 @@ The ideal base solution should acheive the basic goal of arriving at the correct
 
 \
 
-\textbullet\ Objective 1.C: Evaluate implementation and iterate.
+\textbullet\ Aim 2: Optimise the Mastermind Solution.
 
 \
 
-This objective is a continous process which will be referred to throughout the life cycle of the project. Each iteration of the solution, starting with the base solution, should be evaluation against a set of criteria defined later in the document. After this review possible improvements can be documented and worked towards for the next iteration.
+The next step following the creation of a base solution is the optimization of this implementation. The goal with optimization is to discover new methods of how the solution can be improved in regards to its efficiency. In the context of the Mastermind puzzle the concept of a search space is an important factor to optimization as it refers to the set of possible codes which satisfy the problem. An example of how the solution could be optimized is by considering ways in which this search space could be either minimized or how the navigation of the space can be improved.
+
+\
+
+\textbullet\ Objective 2.A: Explore Methods of Optimizing the Search Space.
+
+\
+
+The optimization of the problem's search space is directly linked to the measure of efficiency when considering Mastermind solutions. An of how this can be achieved is by implementing methods of minimizing the search space such that the quantity of possible codes which could satisfy the problem is reduced. The other method that should be investigated is improvements to how the search space is navigated by the solution. This is a method which relates heavily to the concept of heuristics and assigning values to the items within the search space which will be covered in a later section of this report. These are not the only methods that exist to optimize the search space and the exploration of differing methods is to be encouraged and sought out should it be possible.
+
+\
+
+\textbullet\ Objective 2.B: Explore Methods of Measuring the Efficiency of a Solution.
+
+\
+
+To achieve the goal of optimizing the solution it is important to define the elements which are being optimized for. An example of this is already defined by the previous objective in regards to search space however this is not the only area which can be optimized. The question that is to be answered by this objective is how other factors such as the speed at which a solution can reach a code which satisfies the problem should be considered.
+
+\
+
+\textbullet\ Objective 2.C: Improve the Solution.
+
+\
+
+This is a continual objective which encapsulates the main goal of this aim. Measurements of the optimization as defined by previous objectives should reflect the improvements made in later iterations of the solution. Documentation of the results of each optimization method should be presented as a component of this objective.
+
+\
+
+\textbullet\ Aim 3: Evaluate Solution.
+
+\
+
+\textbullet\ Objective 3.A: Design and Evaluation Process.
+
+\
+
+\textbullet\ Objective 3.B: Evaluate the New Solution in the Context of Existing Research.
+
+\
+
+\textbullet\ Aim 4: Investigate Solutions to Mastermind Variants.
+
+\
+
+\textbullet\ Objective 4.A: Investigate Solution with Variance in Set Size for Possible Symbols.
+
+\
+
+\textbullet\ Objective 4.B: Investigate Solution with Variance in Code Length.
+
+\
+
+\textbullet\ Objective 4.C: Investigate Solutions to Similar Problems.
+
 
 
 {Aim 2: The goal of this project is to arrive at a solution which can be evaluated in terms of its soundness and efficiency. This means that the solution should be one that is easily understood with the appropriate explanation. The steps in which the solution is arrived at should follow a logical progression that is reflected in its documentation. The efficiency should be measured through how quickly the correct code combination can be found by the solution.}
