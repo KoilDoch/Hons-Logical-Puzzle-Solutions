@@ -51,7 +51,6 @@ Kathrin Stark}
 \begin{abstract}
 Describe the problem that is to be approached.
 
-
 \end{abstract}
 
 \newpage                     % optional page break
@@ -60,12 +59,26 @@ Describe the problem that is to be approached.
 \newpage                     % optional page break
 \section{Introduction}\label{s:intro}
 %
-%In recent times a global interest has developed around the linguistic game Wordle. The concept of this puzzle is simple, the user is to guess a five letter word in as few guesses as possible within six attempts. After each guess the computer will inform the user if a letter was in the correct position, denoted as a green highlight, or is contained within the word but not in the correct %position, denoted with a yellow highlight.
-The main focus of this project is to investigate solutions to the puzzle game known as Mastermind. The approach will be to develop an initial base solution in a functional programming language which can be iteratively improved with the goal of creating a solution which is logically sound and efficient.
-Mastermind is a simple code-breaking game in which one player will create a secret code which consists of four coloured pegs from a choice of six. This is the standard version of the game however there are multiple variations of the game, some of which will be discussed and examined within the scope of this project.
+%In recent times a global interest has developed around the linguistic game Wordle. The concept of this puzzle is simple, the user is to 
+%guess a five letter word in as few guesses as possible within six attempts. After each guess the computer will inform the user if a letter 
+%was in the correct position, denoted as a green highlight, or is contained within the word but not in the correct position, denoted with a yellow highlight.
+Mastermind is a two-player coded-breaking game in which one player is tasked with discovering a secret combination set by the other player.
+The puzzle is a member of problems known as combinatorial probles where the goal is to find the correct combination of elements from a finite
+set to satisfy a given set of conditions. The process of investigating possible solutions to the Mastermind puzzle has been underway for decades
+however there exists some difficulties in defining a clear solution to this day. The implementation of a solution to the Mastermind puzzle would provide
+benefits to severeal problems face in many sectors of the real world such as cyber security which retains the solutions value as a goal worth seeking.
+Currently the challenges that are being faced in this endeavour relate to finding methods of determing the correct decisions to be made when formulating
+guesses at each step of the puzzle. Several attempts at definind a solution have yeilded promising results yet a common occurence is that these
+implementations struggle when attempting to address variations of the standard Mastermind puzzle.
+
+The implementation that this project seeks to develop will use the foundations provided by the advancements made until the present day. An implementation
+based in the field of functional programming was chosen as the ideal candidate as among other factors which will be discussed further in later sections,
+functional programming provides mitigation against variance in outputs which would contribute to confusion when seeking a rigid solution.
 
 \subsection {Aims and Objectives}
-The aims and objectives of this project can be surmised in two specific goals. The first goal is to derive a solution to the logical puzzle Mastermind. The second goal is to evaluate solutions implemented during this project with the aim to find methods to improve later iterations. An in depth explanation of the chosen aims and objectives are as such:
+The aims and objectives of this project can be surmised in two specific goals. The first goal is to derive a solution to the logical puzzle 
+Mastermind. The second goal is to evaluate solutions implemented during this project with the aim to find methods to improve later 
+iterations. An in depth explanation of the chosen aims and objectives are as such:
 
 \
 
@@ -73,7 +86,10 @@ The aims and objectives of this project can be surmised in two specific goals. T
 
 \
 
- The goal to find a solution to the problem which minimizes the number of guesses required to discover the correct combination of pegs which comprise the code. Intially the goal will be to derive a base solution to the Mastermind puzzle. The base solution being the most intuitive solution to the problem which does not aim to be the most efficient but to provide a foundation on which improvements can be made. The following objectives are associated with this aim:
+ The goal to find a solution to the problem which minimizes the number of guesses required to discover the correct combination of 
+pegs which comprise the code. Intially the goal will be to derive a base solution to the Mastermind puzzle. The base solution being the 
+most intuitive solution to the problem which does not aim to be the most efficient but to provide a foundation on which improvements 
+can be made. The following objectives are associated with this aim:
 
 \
 
@@ -81,7 +97,10 @@ The aims and objectives of this project can be surmised in two specific goals. T
 
 \
 
-The Mastermind puzzle has previously been the subject of similar research regarding the ability to efficiently find the correct code combination. This stage of the project will concern itself with investigating these previous implementations to guide the project. Through exploring the methods utilised in other investigations into this problem the areas in which these solutions are lacking or could be improved can be found. The research presented in this report represents the progress of this objective.
+The Mastermind puzzle has previously been the subject of similar research regarding the ability to efficiently find the correct code 
+combination. This stage of the project will concern itself with investigating these previous implementations to guide the project. 
+Through exploring the methods utilised in other investigations into this problem the areas in which these solutions are lacking or could
+be improved can be found. The research presented in this report represents the progress of this objective.
 
 \
 
@@ -89,7 +108,9 @@ The Mastermind puzzle has previously been the subject of similar research regard
 
 \
 
-The ideal base solution should acheive the basic goal of arriving at the correct code combination but should not be the most elegant solution at this point. Instead the base solution should be the foundation for which improvements are made in later iterations. The base solution will be guided through the research conducted through objective 1.A.
+The ideal base solution should acheive the basic goal of arriving at the correct code combination but should not be the most elegant 
+solution at this point. Instead the base solution should be the foundation for which improvements are made in later iterations. 
+The base solution will be guided through the research conducted through objective 1.A.
 
 \
 
@@ -97,7 +118,11 @@ The ideal base solution should acheive the basic goal of arriving at the correct
 
 \
 
-The next step following the creation of a base solution is the optimization of this implementation. The goal with optimization is to discover new methods of how the solution can be improved in regards to its efficiency. In the context of the Mastermind puzzle the concept of a search space is an important factor to optimization as it refers to the set of possible codes which satisfy the problem. An example of how the solution could be optimized is by considering ways in which this search space could be either minimized or how the navigation of the space can be improved.
+The next step following the creation of a base solution is the optimization of this implementation. The goal with optimization is to discover 
+new methods of how the solution can be improved in regards to its efficiency. In the context of the Mastermind puzzle the concept of a 
+search space is an important factor to optimization as it refers to the set of possible codes which satisfy the problem. An example of how 
+the solution could be optimized is by considering ways in which this search space could be either minimized or how the navigation of the 
+space can be improved.
 
 \
 
@@ -105,7 +130,12 @@ The next step following the creation of a base solution is the optimization of t
 
 \
 
-The optimization of the problem's search space is directly linked to the measure of efficiency when considering Mastermind solutions. An of how this can be achieved is by implementing methods of minimizing the search space such that the quantity of possible codes which could satisfy the problem is reduced. The other method that should be investigated is improvements to how the search space is navigated by the solution. This is a method which relates heavily to the concept of heuristics and assigning values to the items within the search space which will be covered in a later section of this report. These are not the only methods that exist to optimize the search space and the exploration of differing methods is to be encouraged and sought out should it be possible.
+The optimization of the problem's search space is directly linked to the measure of efficiency when considering Mastermind solutions. 
+An of how this can be achieved is by implementing methods of minimizing the search space such that the quantity of possible codes 
+which could satisfy the problem is reduced. The other method that should be investigated is improvements to how the search space 
+is navigated by the solution. This is a method which relates heavily to the concept of heuristics and assigning values to the items within 
+the search space which will be covered in a later section of this report. These are not the only methods that exist to optimize the 
+search space and the exploration of differing methods is to be encouraged and sought out should it be possible.
 
 \
 
@@ -113,7 +143,10 @@ The optimization of the problem's search space is directly linked to the measure
 
 \
 
-To achieve the goal of optimizing the solution it is important to define the elements which are being optimized for. An example of this is already defined by the previous objective in regards to search space however this is not the only area which can be optimized. The question that is to be answered by this objective is how other factors such as the speed at which a solution can reach a code which satisfies the problem should be considered.
+To achieve the goal of optimizing the solution it is important to define the elements which are being optimized for. An example of 
+this is already defined by the previous objective in regards to search space however this is not the only area which can be optimized. 
+The question that is to be answered by this objective is how other factors such as the speed at which a solution can reach a code 
+which satisfies the problem should be considered.
 
 \
 
@@ -121,7 +154,9 @@ To achieve the goal of optimizing the solution it is important to define the ele
 
 \
 
-This is a continual objective which encapsulates the main goal of this aim. Measurements of the optimization as defined by previous objectives should reflect the improvements made in later iterations of the solution. Documentation of the results of each optimization method should be presented as a component of this objective.
+This is a continual objective which encapsulates the main goal of this aim. Measurements of the optimization as defined by previous 
+objectives should reflect the improvements made in later iterations of the solution. Documentation of the results of each optimization 
+method should be presented as a component of this objective.
 
 \
 
@@ -129,7 +164,9 @@ This is a continual objective which encapsulates the main goal of this aim. Meas
 
 \
 
-This aim constitutes the final stages of the project. During this stage a final solution should be implementation with appropriate reasoning as to the optimizations which will be compared to already existing solutions. The comparison process should provide insight into the areas which could still be optimized.
+This aim constitutes the final stages of the project. During this stage a final solution should be implementation with appropriate reasoning 
+as to the optimizations which will be compared to already existing solutions. The comparison process should provide insight into the 
+areas which could still be optimized.
 
 \
 
@@ -137,8 +174,9 @@ This aim constitutes the final stages of the project. During this stage a final 
 
 \
 
-The evaluation process should consider the optimization methods implemented during the development of each solution iteration. It is important that the evaluation process considers factors in which the solution can be compared to similar solutions as to provide reasoning for why one solution may be an improvement over another
-This objective is covered in the Evaluation Strategy chapter later in this report
+The evaluation process should consider the optimization methods implemented during the development of each solution iteration. It is important 
+that the evaluation process considers factors in which the solution can be compared to similar solutions as to provide reasoning for why one 
+solution may be an improvement over another. This objective is covered in the Evaluation Strategy chapter later in this report
 
 \
 
@@ -146,7 +184,8 @@ This objective is covered in the Evaluation Strategy chapter later in this repor
 
 \
 
-The evaluation process provides insight in how an optimization procedure may have given one solution an advantage over a similar implementation. The results of the process should be communicated clearly such that these insights can be reasoned and explained.
+The evaluation process provides insight in how an optimization procedure may have given one solution an advantage over a similar implementation. 
+The results of the process should be communicated clearly such that these insights can be reasoned and explained.
 
 \
 
@@ -154,7 +193,10 @@ The evaluation process provides insight in how an optimization procedure may hav
 
 \
 
-This aim and its associated objectives are intended to be goals which are desired to be included with the results of the project but are not fundamental to the investigation. These objectives should be pursued if the time allows for these areas to be explored. The topic of investigation for this aim is to explore how variations of the Mastermind puzzle can be processed by the solution implemented in this project. Possible optimization methods in respect to these changes should be documented and communicated alongside the challenges encountered.
+This aim and its associated objectives are intended to be goals which are desired to be included with the results of the project but are not fundamental 
+to the investigation. These objectives should be pursued if the time allows for these areas to be explored. The topic of investigation for this aim is to 
+explore how variations of the Mastermind puzzle can be processed by the solution implemented in this project. Possible optimization methods in 
+respect to these changes should be documented and communicated alongside the challenges encountered.
 
 \
 
@@ -162,7 +204,9 @@ This aim and its associated objectives are intended to be goals which are desire
 
 \
 
-A topic that is a recurring source of intrigue with similar research into the Mastermind puzzle is the potential for a solution to scale with changes in the way that the code is constructed. One such change relates to the possible set of symbols which the code could contain. This objective should consider methods of how the solution can adapt when the number of possible symbol increases above the standard six.
+A topic that is a recurring source of intrigue with similar research into the Mastermind puzzle is the potential for a solution to scale with 
+changes in the way that the code is constructed. One such change relates to the possible set of symbols which the code could contain. 
+This objective should consider methods of how the solution can adapt when the number of possible symbol increases above the standard six.
 
 \
 
@@ -170,7 +214,8 @@ A topic that is a recurring source of intrigue with similar research into the Ma
 
 \
 
-An additional scaling factor which is an area of possible investigation is changes in the length of the code. The considerations regarding this objective relate to the ways in how a solution will handle the larger search space and the changes in optimization.
+An additional scaling factor which is an area of possible investigation is changes in the length of the code. 
+The considerations regarding this objective relate to the ways in how a solution will handle the larger search space and the changes in optimization.
 
 \
 
@@ -178,7 +223,8 @@ An additional scaling factor which is an area of possible investigation is chang
 
 \
 
-The solution implemented in this project could have applications beyond the intial Mastermind puzzle. This objective is concerned with how the solution can be applied to other similar problems, an example of such a puzzle would be the popular language game Wordle \cite{Wordle}.
+The solution implemented in this project could have applications beyond the intial Mastermind puzzle. 
+This objective is concerned with how the solution can be applied to other similar problems, an example of such a puzzle would be the popular language game Wordle \cite{Wordle}.
 
 %
 % The \label command is optional, but useful.  To cross-refer to a section/theorem/equation etc.
@@ -188,11 +234,24 @@ The solution implemented in this project could have applications beyond the inti
 \section{Background}\label{ss:back}
 
 % Summary of the background material and introduction to the section
-This section will provide background material which aims to give context to the aims and objectives of this project. The project was inspired by a paper exploring sudoku solutions from a series of problems known as functional pearls, the processes used to derive those solutions will be used to guide this project in this current stage. Following this brief introduction is an explanation of the game Mastermind which the solution will be derived from along with references to previous work by others. The previous work examined will focus on the specific area of search spaces in regards to finding the optimal best move at each position in the puzzle. At the conclusion of this section the goal is that the reader has an understanding of the important concepts relating to this project such that the aims and objectives are clear in their feasability and relevancy.
+This section will provide background material which aims to give context to the aims and objectives of this project. 
+The project was inspired by a paper exploring sudoku solutions from a series of problems known as functional pearls, 
+the processes used to derive those solutions will be used to guide this project in this current stage. 
+Following this brief introduction is an explanation of the game Mastermind which the solution will be derived from along 
+with references to previous work by others. The previous work examined will focus on the specific area of search spaces 
+in regards to finding the optimal best move at each position in the puzzle. At the conclusion of this section the goal is 
+that the reader has an understanding of the important concepts relating to this project such that the aims and objectives
+are clear in their feasability and relevancy.
 
 %%% What is the problem?
 % What is the goal of Mastermind that our solution will be modelled on?
-\subsection {Mastermind}
+\subsection {The Mastermind Puzzle}
+
+\subsubsection {The Rules of Mastermind}
+
+\subsubsection {The Goal of a Solution}
+
+\subsubsection {Variations and Similar Problems}
 
 % A brief history and explanation of the game
 Mastermind is a two-player code-breaking game centered around a code-maker (CM) who creates a secret code and a code-breaker (CB) who attempts to discover the code \cite{Wolfram}.The physical board game was designed by an Isreali Postmaster named Mordecai Meirowitz and originally manufactured by Invicta Toys and Games \cite{Invicta}. 
@@ -221,7 +280,14 @@ The game can be treated as a individual puzzle in the absence of a human $CM$ th
 %%% Search Algorithms
 % Which similar problems exist?
 
-\subsection {Donald Knuth's Solution and Search Spaces}
+\subsection {Early Implementations and Fundamental Concepts}
+
+\subsubsection {Donald E. Knuth Implementation}
+
+\subsubsection {Search Spaces}
+
+\subsubsection {Optimisation of the Search Space}
+
 \par One of the earliest proposed solutions to the Mastermind puzzle was a paper by Donald E. Knuth in which the claim is made that it is possible in all cases for the $CB$ to find the correct code within five attempts \cite {Wolfram} \cite {Knuth}. The solution introduces a concept which is important to solving search problems known as the \emph{consistent search space}, a term which would be defined further in later work \cite{Merelo}. The standard variant of Mastermind assumes that the code is of length four with six possible elements it can be constructed from. This definition would mean the code constructed by the $CM$ would be one of $6^4 = 1296$ possible combinations, this set of combinations is referred to as the \emph search space of the puzzle. 
 
 \par The algorithm that Knuth proposes seeks to restrict this search space after each guess using the feedback provided by the $CM$. The algorithm proceeds after each guess by picking the best possible choice for the subsequent guess at each step, this greedy strategy \cite {Wolfram} is possible as the feedback provided can eliminate combinations which are not consistent with previously guesses. 
@@ -287,12 +353,16 @@ Test Pattern          & Hits & Code  \\ \hline
 
 It is clear that should 4222 be used at the test pattern there are two possibilities in 2212 and 4212 where the code can be known by the third guess. This is a better result compared to the test pattern 1145 where two possibilities will always be the result.
 
-\subsection {Scoring Algorithms in Heuristics / Scoring Possible Combinations}
+\subsection {Progression of Solutions}
 %%% Where is progress currently
 % Donald Knuth's implementation
 % Exhaustive Solutions - Most Parts, Entropy, plus & plus2
 
-\subsection {Functional Pearls}
+\subsection {Functional Programming as a Tool}
+
+\subsubsection {Advantages of Functional Programming}
+
+\subsubsection {Functional Pearls}
 The inspiration for this project was a paper by Richard Bird which implemented a solution to the puzzle game Sudoku as an example of a series of problems known as functional pearls. This sections will explore the topic of functional pearls and their relevance to the current project. Functional Pearls begin as small problems which programmers wish to explore, focusing on brief but engaging examples that showcase either a guided explanation to a proof or presenation of unique data structures. The goal of a functional pearl is to teach important programming techniques and fundamental design principles \cite{Pearls}.  Richard Bird described functional pearls in a speech as 'elegant, instructive exampels of functional programming' while showcasing his implementation of a sudoku solution\cite {R. Bird Speech}.
 
 The solution which this project aims to explore would enter the scope of a functional pearl due to its aim to document an example of functional programming. The project would however deviate from a traditional functional pearl as the scope would be expanded to consider similar solutions in the problem space to evaluate the different methods of solving Mastermind.
@@ -308,12 +378,19 @@ This function would take an input in the form of a Sudoku board, represented by 
 
 where search, prune and choices representing functions declared earlier in the implementation. This sudoku solutions provide an example of how the mastermind solution this project aimst to implement may be approached. Aiming for a solution that resembles this process of declaring an initial function or set of functions then deriving a defintion for them that can be evaluated through comparison with similar solutions. The next section will examine the problem that this project will aim to solve and the work that has been explored in the area previously.
 
+\subsection {Applications Beyond Mastermind}
+
 \newpage                     % optional page break
 \section{Research Methodology and Requirements Analysis}\label{ss:back}
 
 The process of implementing a solution to Mastermind should consider the specifics of how the solution will be optimized. The problem space of solutions to Mastermind puzzles has been explored in multiple over investigations which necessitates that the requirements for this implementation be clearly defined and exhaustive. Guiding the declaration of how the solution should function are the set of research questions which state the purpose of the solution and what it hopes to accomplish.
 
 \subsection {Research Methodology}
+
+\subsubsection{Hypothesis}
+
+\subsubsection {Research Questions}
+
 The question that this project aims to answer is 'How can the combinatorial problem of Mastermind be solved'. The scope of this question is quite large so instead it will be broken down into a set of smaller questions that will help to define the research methodology. Those questions are as such:
 
 \begin {itemize}
@@ -321,8 +398,18 @@ The question that this project aims to answer is 'How can the combinatorial prob
 	\item {Which scoring algorithms provide the best possible chance of selecting the correct code from a set of consistent solutions.}
 \end {itemize}
 
+\subsection {Requirements Analysis}
+
+\subsubsection {MoSCoW Prioritisation}
+
+\subsubsection {Functional Requirements}
+
+\subsubsection {Non-Functional Requirements}
+
 \newpage                     % optional page break
 \section{Evaluation Strategy}\label{ss:back}
+
+\subsection {Defining Metrics}
 
 The evaluation of the solutions implemented in this project relate strongly to the research questions that we have defined in the previous section. Following from this means that the metrics on which our solutions will be evaluated on are as such:
 \begin {itemize}
@@ -332,20 +419,28 @@ The evaluation of the solutions implemented in this project relate strongly to t
 \end{itemize}
 
 \newpage
-\section {Preliminary Work}
+\section {Preliminary Work: The Base Solution}
 
+\subsection {Design of a Base Solution}
+
+\subsection {Results and Analysis of Base Solution}
 In here talk about the work done with the current base solution. It will be originally done based on the donald knuth implementation.
 
 
 \newpage                     % optional page break
 \section{Project Management}\label{ss:back}
 
-\subsection {File and Resource Management}
+\subsection {Organisation of Material}
 
 \subsection {Timeline and Deadlines}
 
+\subsubsection {Important Dates}
+
+\subsubsection {Gantt Chart}
+
 \subsection {Risk Analysis and Mitigations}
 
+\subsubsection {Risk Definitions}
 To manage the progress of this project efficiently it was important to identify possible risks that could prevent the realisation of the goals laid out earlier in this document. To aid in the identification of the risks the following key was used to classify the associated risks:
 \begin{itemize}
 \item{People (P) - Risks which are the result of issues related to those individuals involved in the project. This relates to the wellbeing, scheduling and personal issues that can be encountered.}
@@ -365,6 +460,8 @@ To manage the progress of this project efficiently it was important to identify 
 	\hline
 \end{tabularx}
 
+\subsubsection {Risk Identification}
+
 \begin{tabularx}{1.1\textwidth} {
 	|  >{\center\arraybackslash}X
 	| >{\center\arraybackslash}X
@@ -380,6 +477,10 @@ To manage the progress of this project efficiently it was important to identify 
 	R.1 & Insufficient Base Solution & The success of this project is dependant on having a solid base solution. The success of the base solution is assessed by a set of conditions which deems it suitable for solving the problem. The base solution being unable to meet this conditions is a serious situation and as such should be of a high priority. \\
 	\hline
 \end{tabularx}
+
+\subsubsection {Risk Mitigation Procedures}
+
+\subsection {Considerations of Professional, Legal, Ethical, and Social Issues}
 
 
 
