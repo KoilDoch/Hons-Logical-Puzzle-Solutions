@@ -62,6 +62,7 @@ Describe the problem that is to be approached.
 %In recent times a global interest has developed around the linguistic game Wordle. The concept of this puzzle is simple, the user is to 
 %guess a five letter word in as few guesses as possible within six attempts. After each guess the computer will inform the user if a letter 
 %was in the correct position, denoted as a green highlight, or is contained within the word but not in the correct position, denoted with a yellow highlight.
+\justify{
 Mastermind is a two-player coded-breaking game in which one player is tasked with discovering a secret combination set by the other player.
 The puzzle is a member of problems known as combinatorial probles where the goal is to find the correct combination of elements from a finite
 set to satisfy a given set of conditions. The process of investigating possible solutions to the Mastermind puzzle has been underway for decades
@@ -73,7 +74,7 @@ implementations struggle when attempting to address variations of the standard M
 
 The implementation that this project seeks to develop will use the foundations provided by the advancements made until the present day. An implementation
 based in the field of functional programming was chosen as the ideal candidate as among other factors which will be discussed further in later sections,
-functional programming provides mitigation against variance in outputs which would contribute to confusion when seeking a rigid solution.
+functional programming provides mitigation against variance in outputs which would contribute to confusion when seeking a rigid solution.}
 
 \subsection {Aims and Objectives}
 The aims and objectives of this project can be surmised in two specific goals. The first goal is to derive a solution to the logical puzzle 
@@ -234,6 +235,8 @@ This objective is concerned with how the solution can be applied to other simila
 \section{Background}\label{ss:back}
 
 % Summary of the background material and introduction to the section
+The Mastermind puzzle has been subject to investigations regarding solutions to the code-breaking aspect of the game
+since its release.
 This section will provide background material which aims to give context to the aims and objectives of this project. 
 The project was inspired by a paper exploring sudoku solutions from a series of problems known as functional pearls, 
 the processes used to derive those solutions will be used to guide this project in this current stage. 
@@ -247,46 +250,61 @@ are clear in their feasability and relevancy.
 % What is the goal of Mastermind that our solution will be modelled on?
 \subsection {The Mastermind Puzzle}
 
+% A brief history and explanation of the game
+The Mastermind puzzle began as a two-player game in which one player seeks to break the code created by the other player \cite{Wolfram}.Originally a physical board game designed by an Isreali Postmaster named Mordecai Meirowitz, distributed through Invicta Toys and Games \cite{Invicta}, the game has evolved into a rich area of investigation due to the strategies
+associated with solving its simple rule set.
+
 \subsubsection {The Rules of Mastermind}
 
-\subsubsection {The Goal of a Solution}
+% Explanation of Mastermind puzzle
+The standard variant of the game as it was introduced in 1970 used a simple plastic board with coloured pegs to represent individual elements for the code.
+Each game would begin with a secret code being constructed from c colours and l length, in the standard variant this would result in a code of length four constructed from a set
+of six coloured pegs \cite{Wolfram}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{pegs}
+\caption{ Example codes which would satisfy the contraints of the standard variant of Mastermind.}
+\end{figure}
+
+The codebreaker would attempt several guesses by constructing codes of a similar shape and rewarded with clues as to how closely their guess resembled the hidden code.
+The physical game represented these hints as smaller plastic pegs of two colours, one which would denote that a correct colour had been selected but was used in an incorrect
+position and one which would confirm that a correct colour and position had been selected for an element.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{guesses}
+\caption{A simplified representation of $CB$ attempting to break the code set by $CM$}
+\end{figure}
+
+There are two end states of the game, one in which the code is broken and discovered by the guessing player and one in which the guessing player is unable to discover the code
+within a limit of guesses.
 
 \subsubsection {Variations and Similar Problems}
 
-% A brief history and explanation of the game
-Mastermind is a two-player code-breaking game centered around a code-maker (CM) who creates a secret code and a code-breaker (CB) who attempts to discover the code \cite{Wolfram}.The physical board game was designed by an Isreali Postmaster named Mordecai Meirowitz and originally manufactured by Invicta Toys and Games \cite{Invicta}. 
 
-% Explanation of Mastermind puzzle
-The standard variant of the game plays as follows:
-\begin {itemize}
-	\item {The $CM$ will create a secret code of length $L$ unknown to $CB$ from a set of symbols $S$, in the physical game these were represented by plastic pegs. In the standard variant $L=4$ and $S=6$  represents a code of four symbols in length constructed from a set of six possible symbols.}
-	\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.75]{pegs}
-	\caption{ Example of code enumerations the $CM$ could construct in the standard variant.}
-	\end{figure}
-	\item {The $CB$ is tasked with solving the code that the $CM$ has constructed by creating test patterns from $S$. In the physical board game the number of guesses that the $CB$ is allowed is limited to 10 \cite {Nelson}, the size of the plastic board. The test patterns are evaluated by $CM$ through a pair of indicators. The first indicator, represented by a white plastic peg in the physical game, denotes that a correct symbol was used but in an incorrect position. The second indicator, represented by a black plastic peg, denotes that a correct symbol was used in the correct position.}
-	\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.75]{guesses}
-	\caption{A simplified representation of $CB$ attempting to break the code set by $CM$}
-	\end{figure}
-	\item {The game concludes when either the $CB$ is able to correctly guess the code set by the $CM$ or they exceed the allowed number of guesses.}
-\end {itemize}
+
+
 
 % Why is a solution to this problem important?
 The game can be treated as a individual puzzle in the absence of a human $CM$ through randomly generated code combinations. This project aims to implement a solution to this puzzle that can search for the correct code combination that is comparable with exisiting solutions. The act of searching for the correct code in this context is known as a combinatorial optimization problem with a wide range of applications \cite{Haystack} and it is because of this applicability that the search for a solution is subject to continued investigation.
 
-%%% Search Algorithms
-% Which similar problems exist?
+\subsection {Problem Description and Fundamental Concepts}
 
-\subsection {Early Implementations and Fundamental Concepts}
+\subsubsection {The Goal of a Solution}
+At its core the Mastermind puzzle can be surmised as a combinatorial search problem over the set of all possible combinations, most often this set is referred to as the search space. In respect to this idea a solution to Mastermind would be concerned with implementing a method of selecting to correct combinations to play from this search space. The search space in the standard variant of Mastermind encompasses a total of 1296 unique combinations, the total size of a search space can be found through a simple permutation formula below,
+
+\[ c^s\]
+
+for c colours and a combination of length s.
+
+\subsubsection {Combinatorial Search Spaces}
+
+A complication encountered by previous attempts to develop a solution is the increased strain that larger search space place on the algorithms that traverse them with respect to time and memory. Consider the standard variant of Mastermind which as stated before results in a search space population of 1296 combinations. Adding a single new element to the set of possible combination members increases the population to 2041 however incrementing the code length will result in exponential growth increasing the search space instead to 7776. 
+
+
+\subsubsection {Risks in Searching}
 
 \subsubsection {Donald E. Knuth Implementation}
-
-\subsubsection {Search Spaces}
-
-\subsubsection {Optimisation of the Search Space}
 
 \par One of the earliest proposed solutions to the Mastermind puzzle was a paper by Donald E. Knuth in which the claim is made that it is possible in all cases for the $CB$ to find the correct code within five attempts \cite {Wolfram} \cite {Knuth}. The solution introduces a concept which is important to solving search problems known as the \emph{consistent search space}, a term which would be defined further in later work \cite{Merelo}. The standard variant of Mastermind assumes that the code is of length four with six possible elements it can be constructed from. This definition would mean the code constructed by the $CM$ would be one of $6^4 = 1296$ possible combinations, this set of combinations is referred to as the \emph search space of the puzzle. 
 
@@ -354,6 +372,15 @@ Test Pattern          & Hits & Code  \\ \hline
 It is clear that should 4222 be used at the test pattern there are two possibilities in 2212 and 4212 where the code can be known by the third guess. This is a better result compared to the test pattern 1145 where two possibilities will always be the result.
 
 \subsection {Progression of Solutions}
+
+\subsubsection {Evolutionary Computing}
+A trend in modern solutions to Mastermind is the exploration of evolutionary computation as a tool for developing the algorithms which evaluate the best next step at each stage. 
+This was the basis of research for the 2005 GenMM (Genetic Mastermind) algorithm which sought to compete with the exhaustive search implementations which were currently being investigated at that time [1]. 
+
+Evolutionary computing serves as an adequate route for tackling decision problems such as the evaluation of possible steps to take whilst traversing the search space. 
+The most common way this area is implemented is through the use of Evolutionary Algorithms which simulate the Darwinian natural evolution process to incrementally change the heuristics of a system [2].
+
+
 %%% Where is progress currently
 % Donald Knuth's implementation
 % Exhaustive Solutions - Most Parts, Entropy, plus & plus2
@@ -380,29 +407,64 @@ where search, prune and choices representing functions declared earlier in the i
 
 \subsection {Applications Beyond Mastermind}
 
+\subsubsection {Mastermind Complexity Class}
+Mastermind belongs to a class of problems known as NP-Complete decision problems. This means that they are solveable in exponential time. A solution to Mastermind in polynomial time
+would be an incredibly valuable resource as it would be proof that P = NP. This meaning that for all problems in class NP which are verifiable in polynomial time there exists a polynomial
+solution to the problem. It is currently not known if this hypothesis that P = NP is true however it would be a great benefit to computer science as it would allow for problems such as 
+protein folding to be solved however it would also mean that encryption, a security method which relies on P != NP, would be rendered obselete.
+
 \newpage                     % optional page break
 \section{Research Methodology and Requirements Analysis}\label{ss:back}
 
-The process of implementing a solution to Mastermind should consider the specifics of how the solution will be optimized. The problem space of solutions to Mastermind puzzles has been explored in multiple over investigations which necessitates that the requirements for this implementation be clearly defined and exhaustive. Guiding the declaration of how the solution should function are the set of research questions which state the purpose of the solution and what it hopes to accomplish.
+The scope of a Mastermind solution should focus on the combinatorial problem of how the search space, the set of all possible combinations, should be traversed. As has been explored in the background material the ability to navigate the possible combinations and the hints derived is integral to evaluating the correct steps to take to minimize the distance to a combination which matches the secret code. The research methodologies described in this chapter will propose several questions that this project hopes to answer through its implementation of a unique solution to the Mastermind puzzle. In support of these questions the requirements of the system which will be used to explore the research methodology will also be described.
 
 \subsection {Research Methodology}
 
-\subsubsection{Hypothesis}
-
 \subsubsection {Research Questions}
 
-The question that this project aims to answer is 'How can the combinatorial problem of Mastermind be solved'. The scope of this question is quite large so instead it will be broken down into a set of smaller questions that will help to define the research methodology. Those questions are as such:
+The scope of this project's investigations are broad due to the many differing approaches that have previously been explored. By defining a set of research questions the process of developing a solution can be structured around the aims and objectives stated at the beginning of this report. The research questions are as follows:
 
-\begin {itemize}
-	\item {How can the search space of consistent combinations be minimized}
-	\item {Which scoring algorithms provide the best possible chance of selecting the correct code from a set of consistent solutions.}
-\end {itemize}
+\
 
+\textbf{1. How do exhaustive solutions to traversing the search space of a combinatorial problem compare to evolutionary methods?}
+
+\
+
+A large body of past work has focused on the applications of evolutionary computation, specifically genetic algorithms, to evaluate the combinations within the search space. The results of these implementations have been shown to have an advantage over previous solutions, some of which utilised an exhaustive approach which analysed each member of the search space. This inquiry provides a foundation for the base case of a solution, the results of which can be used as a metric for the evaluation of possible improvements in later iterations.
+
+\
+
+\textbf{2. What are the important factors to be considered when selecting the optimal combination from a search space?}
+
+When approaching a large set of elements it is important to understand why a specific element from that set may be selected over another. The concept of consistency was introduced in the background material of this project which leads to the core of this question which asks how should this specific implementation evaluate which combination to select at each step. There already exists some work in this area presently such as the approach of partitioning combinations based on the hints provided through each guess, a starting step investigating this question can explore implementations utilising this method.
+
+\
+
+\textbf{3. What are the advantages of using functional programming as the basis for a solution to combinatorial search problems?}
+
+\
+
+If the implementation derived from this project are able to return a positive development in finding a solution to the Mastermind puzzle it should be noted to what extent the specific paradigm of functional programming is able to provide support. Following from this it can be investigated if the unique behaviours of functional programming provide benefits which would lend itself to being the optimal tool for further research into the area.
 \subsection {Requirements Analysis}
 
 \subsubsection {MoSCoW Prioritisation}
 
+Description of the moscow prioritisation system.
+
 \subsubsection {Functional Requirements}
+
+Environment Functional Requirements
+
+\begin{tabularx}{\textwidth}{|X|X|X|}
+\hline
+ID     & Description                                                                         & Priority \\ \hline
+FR 1.1 & The system must be capable of storing an integer combination of a given length.     & Must     \\ \hline
+FR 1.2 & The system must be capable of generating an integer combination from a range of given integers and of a given length. & Must \\ \hline
+FR 1.3 & The system must be capable of evaluating equality between two integer combinations. & Must     \\ \hline
+FR 1.4 & The system must be capable of returning information on the similarity of a given input to the stored combination.     & Must \\ \hline
+\end{tabularx}
+
+
 
 \subsubsection {Non-Functional Requirements}
 
@@ -430,13 +492,21 @@ In here talk about the work done with the current base solution. It will be orig
 \newpage                     % optional page break
 \section{Project Management}\label{ss:back}
 
-\subsection {Organisation of Material}
+\subsection {Agile}
 
-\subsection {Timeline and Deadlines}
+Description of the agile methodology and its advantages as it pertains to this project
 
-\subsubsection {Important Dates}
+\subsection {Gantt Chart}
 
-\subsubsection {Gantt Chart}
+The organisation of this project is represented by the following Gantt Chart, by utilising this chart the progress of later stages can be tracked and adjusted if there is a risk to the schedule.
+
+\
+
+[NEED TO FINISH THE GANTT FIGURE
+
+\
+
+It is important that each major milestone of the project is following by a brief review period. The reasons for this is to examine the schedule and provide mitigatin measures if required.
 
 \subsection {Risk Analysis and Mitigations}
 

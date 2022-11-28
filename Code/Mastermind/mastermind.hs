@@ -4,14 +4,18 @@
 -- Author: Kyle Dick, kd41@hw.ac.uk
 
 -- define parameters for the board
-colours :: [Char]
 maxGuess, codeLength :: Integer
-colours = "RYBOGP"
-maxGuess = 6
+setSize = 6     -- code contains integers from 0 to setSize-1
+maxGuess = 10
 codeLength = 4
 
--- input a code length, output a code of that length
-checkGuess :: ([Char], [Char]) -> Bool
-checkGuess ([],[]) = True
-
-
+{-
+input:
+     Int - Size of Elements in Set,
+     Int - Length of Desired Code,
+-}
+generateCode :: Int -> Int -> Int
+generateCode set length =
+    case length of
+        0 -> -1
+        _ -> 10^(length-1)
