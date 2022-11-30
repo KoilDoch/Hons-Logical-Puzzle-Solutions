@@ -1,19 +1,25 @@
-\documentclass[12pt]{article}  % [12pt] option for the benefit of aging markers
+\documentclass[11pt]{article}  % [12pt] option for the benefit of aging markers
 \usepackage{amssymb,amsthm}    % amssymb package contains more mathematical symbols
 \usepackage{graphicx}          % graphicx package enables you to paste in graphics
 \usepackage[document]{ragged2e} 
 \usepackage{float}
 \usepackage{tabularx}
 \usepackage{multirow}
+\usepackage{setspace}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %    Page size commands.  Don't worry about these
 %
-\setlength{\textheight}{220mm}
-\setlength{\topmargin}{-10mm}
-\setlength{\textwidth}{150mm}
-\setlength{\oddsidemargin}{0mm}
+\setlength\topmargin{0pt}
+\addtolength\topmargin{-\headheight}
+\addtolength\topmargin{-\headsep}
+\setlength\oddsidemargin{0pt}
+\setlength\textwidth{\paperwidth}
+\addtolength\textwidth{-2in}
+\setlength\textheight{\paperheight}
+\addtolength\textheight{-2in}
+\doublespacing
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -255,15 +261,13 @@ are clear in their feasibility and relevancy.
 \subsection {The Mastermind Puzzle}
 
 % A brief history and explanation of the game
-The Mastermind puzzle began as a two-player game in which one player seeks to break the code created by the other player \cite{Wolfram}.Originally a physical board game designed by an Isreali Postmaster named Mordecai Meirowitz, distributed through Invicta Toys and Games \cite{Invicta}, the game has evolved into a rich area of investigation due to the strategies
-associated with solving its simple rule set.
+Mastermind is a two-player game in which one player seeks to break a secret code combination created by the other player \cite{Wolfram}. Originally a physical board game designed by an Isreali Postmaster named Mordecai Meirowitz, distributed through Invicta Toys and Games \cite{Invicta}. Mastermind was originally designed as a two player game but it can also be treated as a puzzle due to the passive nature of the player who would create the code combination \cite {Better Solutions}. When viewed from this approach Mastermind can be explored as a puzzle which focuses on different strategies of arriving at the secret code combination, preferably in as few guesses possible.
 
 \subsubsection {The Rules of Mastermind}
 
 % Explanation of Mastermind puzzle
-The standard variant of the game as it was introduced in 1970 used a simple plastic board with coloured pegs to represent individual elements for the code.
-Each game would begin with a secret code being constructed from c colours and l length, in the standard variant this would result in a code of length four constructed from a set
-of six coloured pegs \cite{Wolfram}.
+The standard variant of the puzzle as introduced in the physical board game used plastic pegs to represent both the secret combination and the attempted guesses \cite {Invicta}.
+The length of a code combination in the standard variant is exactly four and can be constructed from a set of six unique colours, with duplicates permitted \cite{Wolfram}.
 
 \begin{figure}[H]
 \centering
@@ -271,57 +275,49 @@ of six coloured pegs \cite{Wolfram}.
 \caption{ Example codes which would satisfy the constraints of the standard variant of Mastermind.}
 \end{figure}
 
-The codebreaker would attempt several guesses by constructing codes of a similar shape and rewarded with clues as to how closely their guess resembled the hidden code.
-The physical game represented these hints as smaller plastic pegs of two colours, one which would denote that a correct colour had been selected but was used in an incorrect
-position and one which would confirm that a correct colour and position had been selected for an element.
+The game begins once the secret code combination has been selected. The process of breaking the secret code consists of one player attempting a sequence of guesses as to the position and colours of the pegs in the code. Each attempt is followed by a hint which informs the player of how accurate their guess was in relation to the secret code. These hints inform the player if a correct colour was played in an incorrect position, most commonly represented with a white peg, and if a correct colour was played in a correct position, represented with a black peg.
+
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{guesses}
-\caption{A simplified representation of $CB$ attempting to break the code set by $CM$}
+\caption{A simplified representation of a game state. The black and white hint pegs replaced with green and amber for clarity.}
 \end{figure}
 
-There are two end states of the game, one in which the code is broken and discovered by the guessing player and one in which the guessing player is unable to discover the code
-within a limit of guesses.
+The game concludes when the correct code combination is discovered, represented through the hint system as four black pegs, or if a limit of guesses would be exceeded.
 
 \subsubsection {Variations and Similar Problems}
 
-
-
-
-
-% Why is a solution to this problem important?
-The game can be treated as an individual puzzle in the absence of a human $CM$ through randomly generated code combinations. This project aims to implement a solution to this puzzle that can search for the correct code combination that is compatible with existing solutions. The act of searching for the correct code in this context is known as a combinatorial optimization problem with a wide range of applications \cite{Haystack} and it is because of this applicability that the search for a solution is subject to continued investigation.
+Multiple variations of the original Mastermind game exist, most commonly varying either the length of the secret code, the size of the set of elements a code can be constructed from or both. One such example of this is the Super Mastermind variant which increments the code length to five elements and increases the possible elements to eight \cite {SuperMM}. These alterations result in 32 768 possible code combinations which could be selected as the secret code, a substantial increase over the 1 296 combinations of the standard variant. This increase becomes relevant when attempting to implement solutions to the puzzle as searching for a correct code combination in the larger sets poses challenges in time and memory \cite {ExhaustiveMM}.
 
 \subsection {Problem Description and Fundamental Concepts}
 
 \subsubsection {The Goal of a Solution}
-At its core the Mastermind puzzle can be surmised as a combinatorial search problem over the set of all possible combinations, most often this set is referred to as the search space. In respect to this idea a solution to Mastermind would be concerned with implementing a method of selecting to correct combinations to play from this search space. The search space in the standard variant of Mastermind encompasses a total of 1296 unique combinations, the total size of a search space can be found through a simple permutation formula below,
+To the perspective of the codebreaker Mastermind presents itself as a search problem which examines a set of all possible combinations which satisfy the given constraints and tasks the player with identifying the secret code within the set. An effective solution to Mastermind would be one that is able to traverse this set of all possible combinations and identify the secret code combination within it.
 
-\[ c^s\]
+\subsubsection {Consistency and Search Strategies}
 
-for c colours and a combination of length s.
+The search space associated with the standard variant of Mastermind contains 1,296 members, a naive strategy for finding the correct code amongst the collection could evaluation each entry individually to find a match to the secret code. A strategy which can prove efficient for smaller search spaces but is not viable as the size of the collection increases \cite{Two Peg}.
 
-\subsubsection {Combinatorial Search Spaces}
+Previous Mastermind solutions would introduce a concept which would allow for easier traversal of these larger search spaces in the form of consistency. The logic behind this concept is that when an attempt is made to find the secret code combination the remaining search space that needs to be evaluated in later attempts is reduced due to that combination no longer being relevant to search and the hint provided from the attempt can deduce which combinations are incompatible with the secret code \cite {Merelo}. The consideration of a combination attempt and the resulting hint can be defined as a rule for that instance \cite {Haystack}. This can be shown for the example below:
 
-A complication encountered by previous attempts to develop a solution is the increased strain that larger search space places on the algorithms that traverse them with respect to time and memory. Consider the standard variant of Mastermind which as stated before results in a search space population of 1296 combinations. Adding a single new element to the set of possible combination members increases the population to 2041 however incrementing the code length will result in exponential growth increasing the search space instead to 7776.
+\
 
+Consider the secret code combination which represents the characters of the code as integers: '1111'. Prior to any search attempt the full range of 1,296 code combinations are equally probable to be the secret code. An attempt to evaluate the code '2332' returns a hint of zero white pegs and zero black pegs, informing the codebreaker that the symbols '2' and '3' do not appear in the secret code and therefore are not consistent with this instance. The only remaining possible code combinations are required to be consistent with this information, this forms the consistent search space. The consistent search space for this example would include all possible code combinations excluding those which contain either symbol '2' or '3'.
 
-\subsubsection {Risks in Searching}
+The concept of a consistent search space provides the basis for two categories of Mastermind solutions \cite{Haystack}:
+
+\textbullet\ Stepwise Optimal: This strategy only selects code combinations which are consistent with the past attempts as defined previously. This method results in less combinations requiring evaluation due to redundant examples being ignored.
+
+\textbullet\ Strategically Optimal: This strategy selects code combinations which allow for information relating to the appearance of the secret code to be deduced. The aim of a strategically optimal search strategy is to reduce the consistent search space by attempting suboptimal code combinations which provide information on the shape of the secret code.
 
 \subsubsection {Donald E. Knuth Implementation}
 
-\par One of the earliest proposed solutions to the Mastermind puzzle was a paper by Donald E. Knuth in which the claim is made that it is possible in all cases for the $CB$ to find the correct code within five attempts \cite {Wolfram} \cite {Knuth}. The solution introduces a concept which is important to solving search problems known as the \emph{consistent search space}, a term which would be defined further in later work \cite{Merelo}. The standard variant of Mastermind assumes that the code is of length four with six possible elements it can be constructed from. This definition would mean the code constructed by the $CM$ would be one of $6^4 = 1296$ possible combinations, this set of combinations is referred to as the \emph search space of the puzzle. 
+One of the earliest proposed solutions to the Mastermind puzzle was a paper by Donald E. Knuth in which the claim is made that it is possible in all cases to arrive at the correct code within five attempts \cite {Wolfram} \cite {Knuth}. The algorithm that Knuth proposes utilises a strategically optimal method which focuses on selecting the combination at each step which will result in the largest reduction of the consistent search space.
 
-\par The algorithm that Knuth proposes seeks to restrict this search space after each guess using the feedback provided by the $CM$. The algorithm proceeds after each guess by picking the best possible choice for the subsequent guess at each step; this greedy strategy \cite {Wolfram} is possible as the feedback provided can eliminate combinations which are not consistent with previous guesses.
-
-\par The first stage of Knuth's investigation was to define the rules of the game in a way that a computer would be able to understand. First defining the two important variables being the code $x_1 x_2 x_3 x_4$ and the test pattern, or guess, $y_1 y_2 y_3 y_4$ The initial rules that were derived were as follows:
-\begin {itemize}
-	\item {The number of "black hits (B)", i.e., the number of positions j such that $x_j = y_i$}
-	\item {The number of "white hits (W)", i.e, the number of positions j such that $x_j =! y_j \  but \ x_j = y_k$ for some k and $y_k$ which has not at this point been a hit \cite {Knuth}.}
-\end {itemize}
-
-The process of restricting the search space can be seen in the example below with the symbols represented as integers (1, 2, 3, 4, 5, 6):
+\justify{
+An example of the strategically optimal method can be shown below using Knuth's algorith, the members of the code represented with the integer range 1, ..., 6.}
 \\
+
 {
 \centering
 \begin{tabular}{cccc}
@@ -331,9 +327,11 @@ No. of Guesses & Test Pattern &  Hits  & Possible Combinations \\
 2 & 1213 &  BWW  &  4 \\
 \end {tabular} \par 
 } 
+
 At the initial point where no guess had been made the search space is still composed of all 1296 possible code combinations. This space of possible combinations is restricted using the result of the first guess which states that three of the chosen symbols were correct however their positions were incorrect. This information allows a great amount of restriction to only 16 possible code combinations which the code could belong to. The second guess restricts this space even further to just four possible combinations. Through this method Knuth asserted that it should be possible to achieve a correct guess within five test patterns. The starting pattern discovered by Knuth to give proof to this claim was found to be 1122. A possible progression of stages from this initial test pattern would be:
 Another example is as follows:
 \\
+
 {
 \centering
 \begin{tabular}{cccc}
@@ -344,8 +342,10 @@ No. of Guesses & Test Pattern &  Hits  & Possible Combinations \\
 1 & 3526 &  W  &  7 \\
 \end {tabular} \par 
 }
+
 This situation would also allow for the next test pattern to distinguish the final possible combinations using the test pattern 1462. The algorithm places a high value on test patterns which coax the process towards the fourth guess being able to distinguish between the possible combinations. This method of solving the problem however is admitted within the paper to not be the most optimal solution. This can be shown by the way that the algorithm processes the following situation:
 \\
+
 {
 \centering
 \begin{tabular}{cccc}
@@ -358,6 +358,7 @@ No. of Guesses & Test Pattern &  Hits  & Possible Combinations \\
 
 which results in a possible four remaining code words (2212, 4212, 5212, 6212). The algorithm would select the test pattern 1145 as the next guess however when compared to the test pattern 4222 it can be shown that it in actuality results in less distinguishing results:
 \\
+
 {
 \centering
 \begin{tabular}{ccc}
@@ -375,7 +376,15 @@ Test Pattern          & Hits & Code  \\ \hline
 
 It is clear that should 4222 be used at the test pattern there are two possibilities in 2212 and 4212 where the code can be known by the third guess. This is a better result compared to the test pattern 1145 where two possibilities will always be the result.
 
+The advantage of using a search strategy such as the one that Knuth proposes is that because it is known in advance how the algorithm will behave for a set on inputs there is a gaurantee on the solution being found in a fixed number of attempts. The concession that is made with this confirmation of a fixed number of attempts however is that the algorithm may make suboptimal attempts due to the fixed path of how it evaluates the code combinations. This flaw leaves opportunities for other search strategies to surpass it in the amount of attempts required to arrive at a solution \cite {Haystack}.
+
+\subsubsection {Risks in Searching}
+
+RANDOMIZED SEARCH
+
 \subsection {Progression of Solutions}
+
+\subsubsection {Exhaustive Solutions}
 
 \subsubsection {Evolutionary Computing}
 A trend in modern solutions to Mastermind is the exploration of evolutionary computation as a tool for developing the algorithms which evaluate the best next step at each stage. 
@@ -384,15 +393,13 @@ This was the basis of research for the 2005 GenMM (Genetic Mastermind) algorithm
 Evolutionary computing serves as an adequate route for tackling decision problems such as the evaluation of possible steps to take whilst traversing the search space. 
 The most common way this area is implemented is through the use of Evolutionary Algorithms which simulate the Darwinian natural evolution process to incrementally change the heuristics of a system [2].
 
-\subsubsection {Genetic Algorithms}
+\subsubsection {State of the Art}
 
 %%% Where is progress currently
 % Donald Knuth's implementation
 % Exhaustive Solutions - Most Parts, Entropy, plus & plus2
 
 \subsection {Functional Programming as a Tool}
-
-\subsubsection {Advantages of Functional Programming}
 
 \subsubsection {Functional Pearls}
 The inspiration for this project was a paper by Richard Bird which implemented a solution to the puzzle game Sudoku as an example of a series of problems known as functional pearls. This section will explore the topic of functional pearls and their relevance to the current project. Functional Pearls begin as small problems which programmers wish to explore, focusing on brief but engaging examples that showcase either a guided explanation to a proof or presentation of unique data structures. The goal of a functional pearl is to teach important programming techniques and fundamental design principles \cite{Pearls}. Richard Bird described functional pearls in a speech as 'elegant, instructive examples of functional programming' while showcasing his implementation of a sudoku solution\cite {R. Bird Speech}.
@@ -436,6 +443,10 @@ The scope of this project's investigations are broad due to the many differing a
 
 \textbf{1. How do exhaustive solutions to traversing the search space of a combinatorial problem compare to evolutionary methods?}
 
+How can the scoring used in evolutionary search algorithms be improved in the context of ranking possible code combinations in the puzzle Mastermind.
+
+Does sampling a population of possible solutions in a search space negatively effect the accuracy of the resulting algorithm when accounting for scale.
+
 \
 
 A large body of past work has focused on the applications of evolutionary computation, specifically genetic algorithms, to evaluate the combinations within the search space. The results of these implementations have been shown to have an advantage over previous solutions, some of which utilised an exhaustive approach which analysed each member of the search space. This inquiry provides a foundation for the base case of a solution, the results of which can be used as a metric for the evaluation of possible improvements in later iterations.
@@ -461,7 +472,13 @@ Description of the moscow prioritisation system.
 
 \subsubsection {Functional Requirements}
 
-Environment Functional Requirements
+The system must be capable of storing a list to represent the search space.
+The system must be capable of storing a list to represent the consistent search space.
+The system must be able to assign values to the elements of the consistent search space according to a fitness function.
+The system must be able to iterate over the elements of the search space and consistent search space.
+The system must be able to rank the elements of the consistent search space.
+
+The system should allow for more than one size of search space.
 
 \begin{tabularx}{\textwidth}{|X|X|X|}
 \hline
@@ -612,21 +629,40 @@ To manage the progress of this project efficiently it was important to identify 
 
 \bibitem {Wordle}
 New York Times,
-{\em "Wordle"}
+{\em "Wordle."}
 https://www.nytimes.com/games/wordle/index.html
 (Online, accessed 21-11-2022)
 
 \bibitem {Wolfram}
 Weisstein, Eric W.
-{\em '"Mastermind." From Mathworld -- A Wolfram Web Resource'}
+{\em '"Mastermind." From Mathworld -- A Wolfram Web Resource.'}
 https://mathworld.wolfram.com/Mastermind.html
-(Online; accessed 9-November-2022)
+(Online; accessed \today)
 
 \bibitem {Invicta}
 Invicta Toys and Games ltd.
-{\em 'History of Mastermind'}
+{\em 'History of Mastermind.'}
 https://web.archive.org/web/20070812104420/http://dspace.dial.pipex.com/town/road/gbd76/toys.htm
 (Archived 2007)
+
+\bibitem {Better Solutions}
+J.-J. Merelo and T. P. Runarsson,
+Finding Better Solutions to the Mastermind Puzzle Using Evolutionary Algorithms.
+{\em 'Applications of Evolutionary Computing.'}
+{\bf vol 6024}
+(2010), pp 121-130
+
+\bibitem {SuperMM}
+Noble Knight Games,
+{\em 'Super Master Mind - Boardgame from Invicta Games.'}
+https://www.nobleknight.com/P/2147590038/Super-MasterMind
+(Online; accessed \today)
+
+\bibitem {ExhaustiveMM}
+Merelo, J.J., Mora, A.M., Cotta, C. and Runarsson, T.P. 
+{\em  ‘An experimental study of exhaustive solutions for the Mastermind puzzle.'}
+(2012)
+ doi:10.48550/arxiv.1207.1315.
 
 \bibitem {Nelson}
 Nelson, Toby.
@@ -640,6 +676,14 @@ Merelo-Guervós, J.J., Castillo, P. and Rivas, V.M.
 {\bf  6(2)}
 (2006) pp. 170–179. 
 doi:10.1016/j.asoc.2004.09.003.
+
+\bibitem {Two Peg}
+Jäger, G.
+An Optimal Strategy for Static Black-Peg Mastermind with Two Pegs.
+{\em 'Combinatorial Optimization and Applications.'}
+{\bf vol 10043}
+(2016), pp 670–682
+https://doi.org/10.1007/978-3-319-48749-6\_48
 
 \bibitem {Knuth}
 Knuth, Donald E. 
@@ -669,8 +713,6 @@ http://www.cs.ox.ac.uk/people/jeremy.gibbons/pearls/
 Bird, Richard.
 {\em Functional Pearl, A Program to Solve Sudoku}
 Cambridge University Press, Cambridge, 2006
-
-
 
 \end{thebibliography}
 \end{document}

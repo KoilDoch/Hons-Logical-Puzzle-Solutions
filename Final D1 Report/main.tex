@@ -1,0 +1,62 @@
+% if you do not like the headers displaying your name and the thesis title, remove the `header` option
+\documentclass[header]{macsthesis} 
+
+% the thesis title
+\title{Functional Mastermind}
+
+% your name
+\author{Kyle Dick}
+
+% your degree programme
+\degree{MEng Software Engineering}
+
+% date of submission (can be set to \today to get the date at the time of processing the document)
+\date{\today}
+
+% supervisor's name
+\supervisor{Kathrin Stark}
+
+% don't mess with this (not a big deal, but still)
+% sets up basic PDF metadata
+\makeatletter
+\hypersetup{
+    pdftitle = {\@title},
+    pdfauthor= {\@author}
+}
+\makeatother
+
+
+\begin{document}
+
+\input{titlepage}
+
+\frontmatter
+
+\input{declaration}
+
+\input{abstract}
+
+\tableofcontents
+
+\mainmatter
+
+\input{introduction}
+
+\input{background}
+
+\input{analysis_or_methodology}
+
+\input{design}
+
+\input{evaluation_strategy}
+
+\input{project_management}
+
+\bibliographystyle{abbrvnat}
+\bibliography{bibliography}
+
+\appendix
+
+\input{appendix}
+
+\end{document}
