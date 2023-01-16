@@ -6,6 +6,7 @@
 \usepackage{tabularx}
 \usepackage{multirow}
 \usepackage{setspace}
+\usepackage{adjustbox}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -55,7 +56,9 @@ Kathrin Stark}
 
 \newpage                     % optional page break
 \begin{abstract}
-Describe the problem that is to be approached.
+
+Mastermind is a two-player game which tasks player A with breaking a code created by player B. The code breaking process consists of making queries regarding the shape of the secret code which is rewarded with hints as to the accuracy of these queries. Beneath this simple game concept lies a complex combinatorial search problem focused on selecting a correct code combination from the set of all possible code combinations constructed from a set of symbols. Investigation into a variety of search algorithms which employ both exhaustive, non-exhaustive and evolutionary strategies aims to further understand how these search algorithms can be adapted to fit larger search spaces.
+
 
 \end{abstract}
 
@@ -169,36 +172,6 @@ method should be presented as a component of this objective.
 
 \
 
-\textbullet\ Aim 3: Evaluate Solution.
-
-\
-
-This aim constitutes the final stages of the project. During this stage a final solution should be implementation with appropriate reasoning 
-as to the optimizations which will be compared to already existing solutions. The comparison process should provide insight into the 
-areas which could still be optimised.
-
-\
-
-\textbullet\ Objective 3.A: Design an Evaluation Process.
-
-\
-
-The evaluation process should consider the optimization methods implemented during the development of each solution iteration. It is important
-that the evaluation process considers factors in which the solution can be compared to similar solutions as to provide reasoning for why one
-a solution may be an improvement over another. This objective is covered in the Evaluation Strategy chapter later in this report
-
-
-\
-
-\textbullet\ Objective 3.B: Present the Results of the Evaluation Process.
-
-\
-
-The evaluation process provides insight into how an optimization procedure may have given one solution an advantage over a similar implementation.
-The results of the process should be communicated clearly such that these insights can be reasoned and explained.
-
-\
-
 \textbullet\ Aim 4: Investigate Solutions to Mastermind Variants.
 
 \
@@ -271,7 +244,7 @@ The length of a code combination in the standard variant is exactly four and can
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{pegs}
+\includegraphics[scale=0.4]{pegs}
 \caption{ Example codes which would satisfy the constraints of the standard variant of Mastermind.}
 \end{figure}
 
@@ -279,8 +252,8 @@ The game begins once the secret code combination has been selected. The process 
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{guesses}
-\caption{A simplified representation of a game state. The black and white hint pegs replaced with green and amber for clarity.}
+\includegraphics[scale=0.4]{guesses}
+\caption{A simplified representation of a game state. The black and white hint pegs were replaced with green and amber for clarity.}
 \end{figure}
 
 The game concludes when the correct code combination is discovered, represented through the hint system as four black pegs, or if a limit of guesses would be exceeded.
@@ -296,7 +269,7 @@ To the perspective of the codebreaker Mastermind presents itself as a search pro
 
 \subsubsection {Consistency and Search Strategies}
 
-The search space associated with the standard variant of Mastermind contains 1,296 members, a naive strategy for finding the correct code amongst the collection could evaluation each entry individually to find a match to the secret code. A strategy which can prove efficient for smaller search spaces but is not viable as the size of the collection increases \cite{Two Peg}.
+The search space associated with the standard variant of Mastermind contains 1,296 members, a naive strategy for finding the correct code amongst the collection could evaluate each entry individually to find a match to the secret code. A strategy which can prove efficient for smaller search spaces but is not viable as the size of the collection increases \cite{Two Peg}.
 
 Previous Mastermind solutions would introduce a concept which would allow for easier traversal of these larger search spaces in the form of consistency. The logic behind this concept is that when an attempt is made to find the secret code combination the remaining search space that needs to be evaluated in later attempts is reduced due to that combination no longer being relevant to search and the hint provided from the attempt can deduce which combinations are incompatible with the secret code \cite {Merelo}. The consideration of a combination attempt and the resulting hint can be defined as a rule for that instance \cite {Haystack}. This can be shown for the example below:
 
@@ -315,7 +288,7 @@ The concept of a consistent search space provides the basis for two categories o
 One of the earliest proposed solutions to the Mastermind puzzle was a paper by Donald E. Knuth in which the claim is made that it is possible in all cases to arrive at the correct code within five attempts \cite {Wolfram} \cite {Knuth}. The algorithm that Knuth proposes utilises a strategically optimal method which focuses on selecting the combination at each step which will result in the largest reduction of the consistent search space.
 
 \justify{
-An example of the strategically optimal method can be shown below using Knuth's algorith, the members of the code represented with the integer range 1, ..., 6.}
+An example of the strategically optimal method can be shown below using Knuth's algorithm,  the members of the code represented with the integer range 1, ..., 6.}
 \\
 
 {
@@ -376,38 +349,47 @@ Test Pattern          & Hits & Code  \\ \hline
 
 It is clear that should 4222 be used at the test pattern there are two possibilities in 2212 and 4212 where the code can be known by the third guess. This is a better result compared to the test pattern 1145 where two possibilities will always be the result.
 
-The advantage of using a search strategy such as the one that Knuth proposes is that because it is known in advance how the algorithm will behave for a set on inputs there is a gaurantee on the solution being found in a fixed number of attempts. The concession that is made with this confirmation of a fixed number of attempts however is that the algorithm may make suboptimal attempts due to the fixed path of how it evaluates the code combinations. This flaw leaves opportunities for other search strategies to surpass it in the amount of attempts required to arrive at a solution \cite {Haystack}.
-
-\subsubsection {Risks in Searching}
-
-RANDOMIZED SEARCH
+The advantage of using a search strategy such as the one that Knuth proposes is that because it is known in advance how the algorithm will behave for a set of inputs there is a guarantee on the solution being found in a fixed number of attempts. The concession that is made with this confirmation of a fixed number of attempts however is that the algorithm may make suboptimal attempts due to the fixed path of how it evaluates the code combinations. This flaw leaves opportunities for other search strategies to surpass it in the amount of attempts required to arrive at a solution \cite {Haystack}.
 
 \subsection {Progression of Solutions}
 
-\subsubsection {Exhaustive Solutions}
+\subsubsection {Exhaustive Solutions and Complexity}
+
+Mastermind solutions can be generalised as combinatorial optimisation problems. The goal of a solution is concerned with improving the methods of navigating the search space associated with the Mastermind puzzle. Exhaustive search algorithms are an example of a possible solution to navigating the search space. In the context of the Mastermind puzzle an exhaustive search algorithm would sequentially consider each possible code combination as a potential candidate for the secret code, this is an example of a worst case solution \cite {ExhaustiveDef}.
+
+A worst case solution refers to the fact that this method of solving Mastermind will yield the largest amount of possible guesses when compared to other search algorithms. The reason for this is that the Mastermind puzzle is classified as an NP-Complete problem \cite{MMNP}. This classification states that it is not currently known if a solution exists for the problem in polynomial time \cite{NP}. The constraints of these search algorithms can be demonstrated with the consideration of scaling the problem, for a code of i elements constructed from a set of c colours the population of code combinations in the search space would be equal to $c^i$ which shows an exponential relationship between the two parameters.
+
+Exhaustive solutions can be utilised despite these limitations by considering a smaller subset of the search space rather than the entire list of possibilities, most commonly this subset is formed from the consistent search space in a method similar to the category of stepwise optimal strategies defined previously \cite {ExhaustiveMM,Yet}.
+
+One such exhaustive method is the Most-Parts strategy which further divides the search space by partitioning combinations based on the hint received by playing them in the puzzle \cite{Yet}. This is possible as there exists a finite set of possible hints that can be derived for each Mastermind configuration based on the length of the code, for example there can only be one combination which returns a hint of four black pegs which correlates to the secret code. This would be treated in the strategy as a partition containing this single code combination. The Most-Parts strategy assigns a greater value to the partitions which contain a larger set of elements as this maximises the probability that the correct code combination is among the members. The Most-Parts strategy is not without flaw however as there is an inherent reliance on the probability of a correct code combination being within a selected population which can introduce variance into the amount of attempts required to arrive at a solution \cite {Yet}.
+
+Later implementations would find success in combining the Most-Parts strategy with a similar strategy known as Entropy. The similarity between these methods being their selection process was dictated by a scoring system amongst the possible code combinations. The new strategies would further constrict the search space of possible code combinations by including only the top scoring selections between these two differing scoring strategies \cite{ExhaustiveMM}. This was a desirable improvement as each of the previous algorithms had demonstrated different behaviour depending on the size of the original search space where Most-Parts would prove more useful for the standard variant whereas Entropy could be more reliable beyond this. The new strategy would prove better equipped to handle both the search space associated with the standard variant and the search spaces associated with a puzzle closer to the Super Mastermind \cite{SuperMM} variant however they are still bound by the limitations of exhaustive searching. The specific limitation being that regardless of the search space size in an exhaustive search strategy all possibilities must be considered.
+
 
 \subsubsection {Evolutionary Computing}
-A trend in modern solutions to Mastermind is the exploration of evolutionary computation as a tool for developing the algorithms which evaluate the best next step at each stage. 
-This was the basis of research for the 2005 GenMM (Genetic Mastermind) algorithm which sought to compete with the exhaustive search implementations which were currently being investigated at that time [1]. 
 
-Evolutionary computing serves as an adequate route for tackling decision problems such as the evaluation of possible steps to take whilst traversing the search space. 
-The most common way this area is implemented is through the use of Evolutionary Algorithms which simulate the Darwinian natural evolution process to incrementally change the heuristics of a system [2].
+Evolutionary algorithms present a new method to optimise solutions based on the ideas used in the exhaustive solutions explored previously. An advantage that such solutions provide is that they have the potential for non-exhaustive strategies to be implemented meaning that an entire search space would not need to be considered which benefits the range of problems that the solution can be applied to.
 
-\subsubsection {State of the Art}
+Evolutionary algorithms reproduce the process of evolution in the natural world by considering multiple generations of a sample population to find the highest scoring member as they are assigned by a fitness function. The purpose of a fitness function is to describe a desired behaviour which is expected of members of a population, for example the constriction of a resulting search space in Mastermind. Evolutionary Algorithms will use small changes known as mutations in the parameters used over multiple iterations of a population to select the most desirable members of a collection \cite{Evo}.
 
-%%% Where is progress currently
-% Donald Knuth's implementation
-% Exhaustive Solutions - Most Parts, Entropy, plus & plus2
+Evolutionary algorithms were the basis for the 2005 GenMM (Genetic Mastermind) algorithm which sought to compete with the exhaustive search implementations such as those investigated previously \cite{Haystack}. The core of the philosophy behind this algorithm still adheres to the concept of a stepwise algorithm with interest shown into utilising methods which can strategically eliminate large sections of a search space \cite {Haystack}. The progress of Mastermind solutions has been further developed with evidence of exhaustive search strategies being translated into evolutionary algorithms which can provide support for larger search spaces however these implementations can benefit from utilising features from newer algorithms.
+The Reptile Search Algorithm is an optimisation strategy for search problems which models the behaviour of crocodile hunting patterns. The current implementations of this algorithm have proven successful for similar search problems such as Tic-tac-toe however it is untested for the Mastermind puzzle specifically \cite{RSA}.
+
 
 \subsection {Functional Programming as a Tool}
 
-\subsubsection {Functional Pearls}
-The inspiration for this project was a paper by Richard Bird which implemented a solution to the puzzle game Sudoku as an example of a series of problems known as functional pearls. This section will explore the topic of functional pearls and their relevance to the current project. Functional Pearls begin as small problems which programmers wish to explore, focusing on brief but engaging examples that showcase either a guided explanation to a proof or presentation of unique data structures. The goal of a functional pearl is to teach important programming techniques and fundamental design principles \cite{Pearls}. Richard Bird described functional pearls in a speech as 'elegant, instructive examples of functional programming' while showcasing his implementation of a sudoku solution\cite {R. Bird Speech}.
+\subsubsection {The Functional Paradigm}
+
+The use of a strongly typed functional programming paradigm provides advantages to the area of combinatorial search optimisation. The levels of abstraction that functional programming allows provides elegant translation of logical solutions into implementable algorithms. The lazy evaluation behaviour of a functional language like Haskell however can cost the solution in memory but the ability to ensure that a deterministic implementation is achievable is a net positive as it eliminates any randomisation risk that would be present in an interpretable paradigm \cite {Practical Haskell}.
+
+\subsubsection {Examples of Functional Programming}
+
+Genetic programming has seen exploration in the context of a functional implementation which utilises a concept of combinator expressions to investigate comparisons between exhaustive strategies for searching and genetic algorithms \cite {Functional Genetics}.
+
+An example of a functional approach to a puzzle similar to Mastermind is a paper by Richard Bird which implemented a solution to the puzzle game Sudoku as a part of a series of problems known as functional pearls. The goal of a functional pearl is to teach important programming techniques and fundamental design principles \cite{Pearls}. Richard Bird described functional pearls in a speech as 'elegant, instructive examples of functional programming' while showcasing his implementation of a sudoku solution\cite {R. Bird Speech}.
 
 
-The solution which this project aims to explore would enter the scope of a functional pearl due to its aim to document an example of functional programming. The project would however deviate from a traditional functional pearl as the scope would be expanded to consider similar solutions in the problem space to evaluate the different methods of solving Mastermind.
-
-The functional pearl which inspired the project is Richard Birds paper 'Functional Pearl: A Program to Solve Sudoku' \cite{Sudoku}. The aim of the solution was to define the function:
+The approach that Richard Bird took was to aim of the solution was to define the function:
 
 \[ Sudoku :: Board \rightarrow [Board]\]
 
@@ -416,20 +398,12 @@ This function would take an input in the form of a Sudoku board, represented by 
 \[ Sudoku :: Board \rightarrow [Board]\]
 \[ Sudoku = map (map head) \bullet search \bullet prune \bullet choices\]
 
-where search, prune and choices representing functions declared earlier in the implementation. These sudoku solutions provide an example of how the mastermind solution this project aims to implement may be approached. Aiming for a solution that resembles this process of declaring an initial function or set of functions then deriving a definition for them that can be evaluated through comparison with similar solutions. The next section will examine the problem that this project will aim to solve and the work that has been explored in the area previously.
+where search, prune and choices representing functions declared earlier in the implementation. These sudoku solutions provide an example of how the mastermind solution this project aims to implement may be approached. Aiming for a solution that resembles this process of declaring an initial function or set of functions then deriving a definition for them that can be evaluated through comparison with similar solutions.
 
-\subsection {Applications Beyond Mastermind}
-
-\subsubsection {Mastermind Complexity Class}
-Mastermind belongs to a class of problems known as NP-Complete decision problems. This means that they are solvable in exponential time. A solution to Mastermind in polynomial time
-would be an incredibly valuable resource as it would be proof that P = NP. This meaning that for all problems in class NP which are verifiable in polynomial time there exists a polynomial
-solution to the problem. It is currently not known if this hypothesis that P = NP is true however it would be a great benefit to computer science as it would allow for problems such as
-protein folding to be solved however it would also mean that encryption, a security method which relies on P != NP, would be rendered obsolete.
+This approach can be similarly utilised for the design of a solution to Mastermind through consideration of the explored search strategies which have been proposed.
 
 \newpage                     % optional page break
 \section{Research Methodology and Requirements Analysis}\label{ss:back}
-
-The base goal of this project is t
 
 The scope of a Mastermind solution should focus on the combinatorial problem of how the search space, the set of all possible combinations, should be traversed. As has been explored in the background material the ability to navigate the possible combinations and the hints derived is integral to evaluating the correct steps to take to minimise the distance to a combination which matches the secret code. The research methodologies described in this chapter will propose several questions that this project hopes to answer through its implementation of a unique solution to the Mastermind puzzle. In support of these questions the requirements of the system which will be used to explore the research methodology will also be described.
 
@@ -439,87 +413,49 @@ The scope of a Mastermind solution should focus on the combinatorial problem of 
 
 The scope of this project's investigations are broad due to the many differing approaches that have previously been explored. By defining a set of research questions the process of developing a solution can be structured around the aims and objectives stated at the beginning of this report. The research questions are as follows:
 
-\
+\textbf{1. How can the scoring procedure of an evolutionary algorithm be improved to increase the accuracy of a Mastermind solution?}
 
-\textbf{1. How do exhaustive solutions to traversing the search space of a combinatorial problem compare to evolutionary methods?}
-
-How can the scoring used in evolutionary search algorithms be improved in the context of ranking possible code combinations in the puzzle Mastermind.
-
-Does sampling a population of possible solutions in a search space negatively effect the accuracy of the resulting algorithm when accounting for scale.
-
-\
-
-A large body of past work has focused on the applications of evolutionary computation, specifically genetic algorithms, to evaluate the combinations within the search space. The results of these implementations have been shown to have an advantage over previous solutions, some of which utilised an exhaustive approach which analysed each member of the search space. This inquiry provides a foundation for the base case of a solution, the results of which can be used as a metric for the evaluation of possible improvements in later iterations.
-
-\
-
-\textbf{2. What are the important factors to be considered when selecting the optimal combination from a search space?}
-
-When approaching a large set of elements it is important to understand why a specific element from that set may be selected over another. The concept of consistency was introduced in the background material of this project which leads to the core of this question which asks how should this specific implementation evaluate which combination to select at each step. There already exists some work in this area presently such as the approach of partitioning combinations based on the hints provided through each guess, a starting step investigating this question can explore implementations utilising this method.
-
-\
-
-\textbf{3. What are the advantages of using functional programming as the basis for a solution to combinatorial search problems?}
-
-\
-
-If the implementation derived from this project is able to return a positive development in finding a solution to the Mastermind puzzle it should be noted to what extent the specific paradigm of functional programming is able to provide support. Following from this it can be investigated if the unique behaviours of functional programming provide benefits which would lend itself to being the optimal tool for further research into the area.
-\subsection {Requirements Analysis}
+\textbf{2. Can taking a sample of a search space increase the range of applicable search spaces for a Mastermind solution?}
 
 \subsubsection {MoSCoW Prioritisation}
 
-Description of the moscow prioritisation system.
+This project utilises a MoSCoW prioritisation system to organise the requirements for the solution system. This system assigns the following priorities to each of the requirements:
+
+\textbullet\ Must Have (M) - The requirements with the highest level of priority. These requirements are fundamental to the operation of the system.
+
+\textbullet\ Should Have (S) - The requirements which are not as fundamental to the system as the previous category but ideally should be present in the final version of the system.
+
+\textbullet\ Could Have (C) - The requirements which are not important to achieving the goals of the system but would be beneficial to the system.
+
+\textbullet\ Won’t Have (W) - The requirements which will not be present within the system. This is either due to them not fitting the scope of the system or being ill suited but still worth noting.
+
 
 \subsubsection {Functional Requirements}
 
-The system must be capable of storing a list to represent the search space.
-The system must be capable of storing a list to represent the consistent search space.
-The system must be able to assign values to the elements of the consistent search space according to a fitness function.
-The system must be able to iterate over the elements of the search space and consistent search space.
-The system must be able to rank the elements of the consistent search space.
-
-The system should allow for more than one size of search space.
-
-\begin{tabularx}{\textwidth}{|X|X|X|}
-\hline
-ID     & Description                                                                         & Priority \\ \hline
-FR 1.1 & The system must be capable of storing an integer combination of a given length.     & Must     \\ \hline
-FR 1.2 & The system must be capable of generating an integer combination from a range of given integers and of a given length. & Must \\ \hline
-FR 1.3 & The system must be capable of evaluating equality between two integer combinations. & Must     \\ \hline
-FR 1.4 & The system must be capable of returning information on the similarity of a given input to the stored combination.     & Must \\ \hline
-\end{tabularx}
-
-
-
-\subsubsection {Non-Functional Requirements}
+\begin{figure}[H]
+\centering
+\caption[Short Heading]{A list of functional requirements for the solution.}
+\includegraphics[scale=1]{Requirements}
+\end{figure}
 
 \newpage                     % optional page break
 \section{Evaluation Strategy}\label{ss:back}
 
+A solution for Mastermind can be defined as an algorithm that is able to consistently select the correct combination from a set of all possible combinations bounded by two parameters, the length of the combinations and the total number of symbols that a combination can be constructed from. This is the definition which is used to derive the metrics and methods by which the solution will be evaluated.
+
 \subsection {Defining Metrics}
 
-The evaluation of the solutions implemented in this project relate strongly to the research questions that we have defined in the previous section. Following from this means that the metrics on which our solutions will be evaluated on are as such:
+The following three metrics are used for evaluating a solution.
 \begin {itemize}
-	\item {A solution which is able to restrict the consistent combination search space is considered more valuable.}
-	\item {A solution which is more accurate in selecting the correct code from the consistent search space is more valuable.}
-	\item {A solution which is able to scale elegantly with both an increase in possible symbols which comprise the code and an increase in the length of the code.}
+	\item {The average number of guesses for the algorithm to arrive at the correct solution.}
+	\item {The quantity of combinations reduced from the search space after each guess.}
+	\item {The probability of selecting the correct combination from a set of conistent combinations \cite {ExhaustiveMM}.}
 \end{itemize}
 
-\newpage
-\section {Preliminary Work: The Base Solution}
-
-\subsection {Design of a Base Solution}
-
-\subsection {Results and Analysis of Base Solution}
-In here talk about the work done with the current base solution. It will be originally done based on the donald knuth implementation.
-
+An additional argument can be made for measuring the time taken for an algorithm to terminate at the correct combination however this is dependent on the environment in which the algorithm is being hosted. The above metrics were chosen as they can be used to compare different algorithms accurately separate from the hosting environment
 
 \newpage                     % optional page break
 \section{Project Management}\label{ss:back}
-
-\subsection {Agile}
-
-Description of the agile methodology and its advantages as it pertains to this project
 
 \subsection {Gantt Chart}
 
@@ -527,11 +463,13 @@ The organisation of this project is represented by the following Gantt Chart, by
 
 \
 
-[NEED TO FINISH THE GANTT FIGURE
+\begin{figure}[H]
+\centering
+\caption[Short Heading]{Gantt Chart Organisation for Project.}
+\includegraphics[scale=0.5]{Gantt}
+\end{figure}
 
 \
-
-It is important that each major milestone of the project is followed by a brief review period. The reason for this is to examine the schedule and provide mitigation measures if required.
 
 \subsection {Risk Analysis and Mitigations}
 
@@ -543,39 +481,38 @@ To manage the progress of this project efficiently it was important to identify 
 \item{Requirement (R)  - Risks which can result from changes to the requirements of the project. This relates to problems encountered with the work being implemented for the project. Logical problems and issues with the material involved would be included in these risks.}
 \end{itemize}
 
-\begin{tabularx}{1.1\textwidth} {
-	|  >{\center\arraybackslash}X
-	| >{\center\arraybackslash}X
-	| >{\center\arraybackslash}X
-	| >{\center\arraybackslash} X | }
-	\hline
-	ID & Risk & Description \\
-	\hline
-	P/T/R1 & Textual Title of Risk & Textual Description of the Risk \\
-	\hline
-\end{tabularx}
+\begin{figure}[H]
+\centering
+\caption[Short Heading]{Classification of Risks.}
+\includegraphics[scale=1]{RiskIdentify}
+\end{figure}
 
 \subsubsection {Risk Identification}
 
-\begin{tabularx}{1.1\textwidth} {
-	|  >{\center\arraybackslash}X
-	| >{\center\arraybackslash}X
-	| >{\center\arraybackslash}X
-	| >{\center\arraybackslash} X | }
-	\hline
-	ID & Risk & Description \\
-	\hline
-	P.1 & Illness and Health Complications & The situation in which an individual involved in the project is unable to contribute due to illness or health complications. This risk is slightly heightened as the world recovers from the effects of the Covid-19 pandemic however it also considers other conditions which would require time away from the project. \\
-	\hline
-	T.1 & File Loss & This is the situation in which files or documents relating to the project are lost. This is a low priority issue as precautions have been taken to mitigate this such as using version control through Github. \\
-	\hline
-	R.1 & Insufficient Base Solution & The success of this project is dependent on having a solid base solution. The success of the base solution is assessed by a set of conditions which deems it suitable for solving the problem. The base solution being unable to meet these conditions is a serious situation and as such should be of a high priority. \\
-	\hline
-\end{tabularx}
+\begin{figure}[H]
+\centering
+\caption[Short Heading]{Identified Project Risks.}
+\includegraphics[scale=0.75]{Risks}
+\end{figure}
 
 \subsubsection {Risk Mitigation Procedures}
 
+P.1:	Space has been allocated in the project timetable and schedule to allow for leniency in the  event of illness. If serious illness is encountered the University mitigating circumstances guidelines are available as an additional procedure.
+
+T.2:	All contributions are stored remotely in a backup online repository.
+
+T.2:	The scope of this project allows for the range of search spaces to remain within a feasible limit while still maintaining the ability to gather meaningful results.
+
+R.1: 	Time in the schedule for the project has been allocated to prevent the effect that setbacks in the project can have. Any problems with solutions can serve as commentary to the implementation procedure.
+
+R.2:	Fitness function security is to be closely monitored and testing procedures implemented to minimise the effects of an invalid fitness function in later stages.
+
 \subsection {Considerations of Professional, Legal, Ethical, and Social Issues}
+
+Professional consideration regarding this project extends to citations of work which has contributed to the contents of this investigation. It is important that any work which was not conducted by an individual involved in this project is correctly cited to avoid plagiarism.
+Development software involved in this project should be legally obtained and operated.
+This project does not involve any human subjects or the management of sensitive personal information which would require ethical or social consideration.
+
 
 
 
@@ -629,13 +566,13 @@ To manage the progress of this project efficiently it was important to identify 
 
 \bibitem {Wordle}
 New York Times,
-{\em "Wordle."}
+{\em "Wordle".}
 https://www.nytimes.com/games/wordle/index.html
 (Online, accessed 21-11-2022)
 
 \bibitem {Wolfram}
 Weisstein, Eric W.
-{\em '"Mastermind." From Mathworld -- A Wolfram Web Resource.'}
+{\em '"Mastermind." From Mathworld -- A Wolfram Web Resource'.}
 https://mathworld.wolfram.com/Mastermind.html
 (Online; accessed \today)
 
@@ -648,25 +585,25 @@ https://web.archive.org/web/20070812104420/http://dspace.dial.pipex.com/town/roa
 \bibitem {Better Solutions}
 J.-J. Merelo and T. P. Runarsson,
 Finding Better Solutions to the Mastermind Puzzle Using Evolutionary Algorithms.
-{\em 'Applications of Evolutionary Computing.'}
+{\em 'Applications of Evolutionary Computing'.}
 {\bf vol 6024}
 (2010), pp 121-130
 
 \bibitem {SuperMM}
 Noble Knight Games,
-{\em 'Super Master Mind - Boardgame from Invicta Games.'}
+{\em 'Super Master Mind - Boardgame from Invicta Games'.}
 https://www.nobleknight.com/P/2147590038/Super-MasterMind
 (Online; accessed \today)
 
 \bibitem {ExhaustiveMM}
 Merelo, J.J., Mora, A.M., Cotta, C. and Runarsson, T.P. 
-{\em  ‘An experimental study of exhaustive solutions for the Mastermind puzzle.'}
+{\em  ‘An experimental study of exhaustive solutions for the Mastermind puzzle'.}
 (2012)
  doi:10.48550/arxiv.1207.1315.
 
 \bibitem {Nelson}
 Nelson, Toby.
-{\em 'Investigations into the MasterMind Board Game'}
+{\em 'Investigations into the MasterMind Board Game'.}
 https://web.archive.org/web/20150906043015/http://www.tnelson.demon.co.uk/mastermind/index.html
 (1999, Archived 2015)
 
@@ -680,7 +617,7 @@ doi:10.1016/j.asoc.2004.09.003.
 \bibitem {Two Peg}
 Jäger, G.
 An Optimal Strategy for Static Black-Peg Mastermind with Two Pegs.
-{\em 'Combinatorial Optimization and Applications.'}
+{\em 'Combinatorial Optimization and Applications'.}
 {\bf vol 10043}
 (2016), pp 670–682
 https://doi.org/10.1007/978-3-319-48749-6\_48
@@ -696,6 +633,63 @@ Stanford University
  Merelo, J.J., Mora, A.M., Cotta, C. and Runarsson, T.P. 
 {\em ‘An experimental study of exhaustive solutions for the Mastermind puzzle’.}
 (2012) 
+
+\bibitem {ExhaustiveDef}
+Weisstein, Eric W.
+{\em '"Exhaustive Search." From Mathworld -- A Wolfram Web Resource'.}
+https://mathworld.wolfram.com/ExhaustiveSearch.html
+(Online; accessed \today)
+
+\bibitem {MMNP}
+Stuckman, J. and Zhang, G.-Q.
+{\em  ‘Mastermind is NP-Complete’.}
+(2005)
+doi:10.48550/arxiv.cs/0512049.
+
+\bibitem {NP}
+Weisstein, Eric W.
+{\em 'NP-Problem' From Mathworld -- A Wolfram Web Resource'.}
+https://mathworld.wolfram.com/NP-Problem.html
+(Online; accessed \today)
+
+\bibitem {Yet}
+Kooi, B.
+‘Yet another mastermind strategy’,
+{\em ICGA Journal}
+{\bf 28(1)}
+pp. 13-20.
+
+\bibitem {Evo}
+P. A. Vikhar,
+'Evolutionary algorithms: A critical review and its future prospects',
+{\em International Conference on Global Trends in Signal Processing, Information Computing and Communication (ICGTSPICC)}
+(2016)
+pp. 261-265
+doi: 10.1109/ICGTSPICC.2016.7955308
+
+\bibitem {RSA}
+Abualigah, L., Elaziz, M.A., Sumari, P., Geem, Z.W. and Gandomi, A.H. 
+‘Reptile Search Algorithm (RSA): A nature-inspired meta-heuristic optimizer’,
+{\em  Expert systems with applications}
+{\bf 191}
+(2022), 
+pp. 116-158.
+ doi:10.1016/j.eswa.2021.116158.
+
+\bibitem {Practical Haskell}
+Serrano Mena, A. 
+{\em 'Practical Haskell'.}
+(2022) Berkeley, CA: 
+Apress L. P.
+
+\bibitem {Functional Genetics}
+Briggs, Forrest., O'Neill, Melissa. 
+'Functional Genetic Programming and Exhaustive Program Search with Combinator Expressions'.
+{\em International Journal of Knowledge-based and Intelligent Engineering Systems.}
+{\bf 12}
+(2008),
+pp 47-68. 
+10.3233/KES-2008-12105. 
 
 \bibitem {Pearls}
 Bird, Richard.
