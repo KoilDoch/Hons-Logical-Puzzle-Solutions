@@ -25,7 +25,7 @@ but for this process and array was sufficient as the first element
 is important.
 -}
 
-type Code = [Char]
+type Code = [Int]
 type Pegs = (Int, Int)
 
 bruteSolution :: [(Code, Pegs)] -> Code
@@ -46,7 +46,7 @@ If given two lists, it will return a tuple which evaluates the
 number of correct elements based on appearance in the first tuple element
 and correct element AND position in the second tuple element.
 -}
-checkGuess :: Eq code => [code] -> [code] -> Pegs
+checkGuess :: Eq Code => Code -> Code -> Pegs
 checkGuess code guess = foldl assignPegs (0,0) (zip code guess)
     where 
     assignPegs (white, black) (x, y)
