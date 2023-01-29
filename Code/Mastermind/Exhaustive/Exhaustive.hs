@@ -21,17 +21,17 @@ number of correct elements based on appearance in the first tuple element
 and correct element AND position in the second tuple element.
 -}
 checkGuess :: Eq a => [a] -> [a] -> (Int,Int)
-checkGuess code guess = foldl assignPegs (0,0) (zip code guess)
+checkGuess guess code = foldl assignPegs (0,0) (zip guess code)
     where 
     assignPegs (black, white) (x, y)
-        | x == y = (black, white + 1)
-        | x `elem` guess = (black + 1, white)
+        | x == y = (black + 1, white)
+        | x `elem` code = (black, white + 1)
         | otherwise = (black, white)
 
 
 checkConsistency :: Eq a => [a] -> [([a], (Int,Int))] -> [[a]]
-checkConsistency code consistentSet = map (\(list,_) -> map (\x -> x) list) consistentSet
-
+checkConsistency code consistentSet = let conCodes = map (\(list,_) -> map (\x -> x) list) consistentSet
+ in conCodes
  
 -- takes the code and the list of previous guesses and tries the solution on each
 -- mastermind :: Eq a => [a] -> [a] -> [([a], (Int,Int))] -> [([a], (Int,Int))]
