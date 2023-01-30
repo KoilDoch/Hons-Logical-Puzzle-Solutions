@@ -7,27 +7,23 @@
 
 import Data.List
 import Distribution.Compat.CharParsing (space)
+import Control.Monad (replicateM)
 testSet :: Num a => [([a],(Int,Int))]
 testSet = [([4,1,2,3], (2,2)) , ([0,2,3,4], (0,3)), ([1,0,0,0], (0,1))]
+testSpace :: Num a => [[a]]
+testSpace = [[1,2,3,3],[3,0,3,2],[0,3,2,3],[3,0,1,3],[4,4,4,4],[1,0,4,0]]
 
--- solve :: [a] -> [([a], (Int,Int))] -> [([a], (Int,Int))]
--- solve code guesses space = case space of
---     [] -> guesses
---     (x :: xs) -> if checkGuess x $ head fst guesses == head snd guesses
---         then if allIdentical (checkConsistency x guesses code)
---             then [(x, checkGuess x code)] : guesses
-    
-{-
-This function evaluates a code based on the hidden combination
-If given two lists, it will return a tuple which evaluates the
-number of correct elements based on appearance in the first tuple element
-and correct element AND position in the second tuple element.
--}
+solveStep :: Eq a => [a] -> [([a], (Int,Int))] -> [[a]] -> [a]
+solveStep secret guesses space = head (pruneInconsistent (fst $ head guesses) secret space)
+
+pruneInconsistent :: Eq a => [a] -> [a] -> [[a]] -> [[a]]
+pruneInconsistent code secret space = filter (\x -> checkConsistency x code secret) space
+
 checkGuess :: Eq a => [a] -> [a] -> (Int,Int)
-checkGuess guess code = (checkBlack guess code, checkWhite guess code)
+checkGuess guess code = (checkBlack guess code, length $ checkWhite guess code)
 
-checkWhite :: Eq a => [a] -> [a] -> Int
-checkWhite guess code = length $ findIndices (\(x,y) -> x `elem` code && x /= y) (zip guess code)
+checkWhite :: Eq a => [a] -> [a] -> [Int]
+checkWhite guess code = findIndices (\(x,y) -> x `elem` code && x /= y) (zip guess code)
 
 checkBlack :: Eq a => [a] -> [a] -> Int
 checkBlack guess code = length [x | (x,y) <- zip guess code, x == y]
@@ -42,7 +38,10 @@ checkConsistencySet code consistentSet secret = let conCodes = map (\(list,_) ->
 -- check equality of a list, need to change to universal
 allIdentical :: [Bool] -> Bool
 allIdentical xs = and xs
- 
+
+generatePermutations :: [a] -> Int -> [[a]]
+generatePermutations set size = replicateM size set
+
 -- mastermind :: Eq a => [a] -> [a] -> [([a], (Int,Int))] -> [([a], (Int,Int))]
 -- mastermind symbols code guesses = 
 --     let guess = solveStep symbols guesses
