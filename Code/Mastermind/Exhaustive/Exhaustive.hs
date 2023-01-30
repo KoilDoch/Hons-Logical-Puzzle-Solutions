@@ -24,12 +24,13 @@ number of correct elements based on appearance in the first tuple element
 and correct element AND position in the second tuple element.
 -}
 checkGuess :: Eq a => [a] -> [a] -> (Int,Int)
-checkGuess guess code = foldl assignPegs (0,0) (zip guess code)
-    where 
-    assignPegs (black, white) (x, y)
-        | x == y = (black + 1, white)
-        | x `elem` code = (black, white + 1)
-        | otherwise = (black, white)
+checkGuess guess code = (checkBlack guess code, checkWhite guess code)
+
+checkWhite :: Eq a => [a] -> [a] -> Int
+checkWhite guess code = length $ findIndices (\(x,y) -> x `elem` code && x /= y) (zip guess code)
+
+checkBlack :: Eq a => [a] -> [a] -> Int
+checkBlack guess code = length [x | (x,y) <- zip guess code, x == y]
 
 checkConsistency :: Eq a => [a] -> [a] -> [a] -> Bool
 checkConsistency guess code secret = checkGuess guess code == checkGuess code secret
