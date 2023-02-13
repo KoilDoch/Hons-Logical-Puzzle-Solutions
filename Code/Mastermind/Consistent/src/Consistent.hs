@@ -62,27 +62,31 @@ solveStep secret guesses space =
             else solveStep secret guesses $ drop 1 newSpace
 
 isSpace :: [a] -> Int -> [[a]] -> [[a]]
-isSpace symbols i s =
-    if length s == 0
-        then generatePermutations symbols i
-        else s
+isSpace symbols i [] = generatePermutations symbols i
+isSpace symbols i s = s
 
 isGuesses :: Eq a => [[a]] -> [a] -> [([a], (Int,Int))] -> [([a], (Int,Int))]
-isGuesses space secret guesses =
-    if length guesses == 0
-        then [(head space, evalGuess (head space) secret)]
-        else guesses
+isGuesses space secret [] = [(head space, evalGuess (head space) secret)]
+isGuesses space secret guesses = guesses
 
 mastermind :: Eq a => [a] -> [a] -> [([a], (Int,Int))] -> [[a]] -> [([a], (Int,Int))]
+mastermind symbols secret [] [] = 
+    do
+        let space = generatePermutations symbols $ length secret
+        let guesses = [(head space, evalGuess (head space) secret)]
+        let newGuess = solveStep secret guesses space
+        if evalGuess newGuess secret == (4,0)
+            then
+                (newGuess, evalGuess newGuess secret) : guesses
+            else mastermind symbols secret ((newGuess, evalGuess newGuess secret) : guesses) space
+            
 mastermind symbols secret guesses space =
     do
-        let s = isSpace symbols (length secret) space
-        let g = isGuesses s secret guesses
-        let newGuess = solveStep secret g s
-        if (evalGuess newGuess secret == (4,0))
+        let newGuess = solveStep secret guesses space
+        if evalGuess newGuess secret == (4,0)
             then
-                (newGuess, evalGuess newGuess secret) : g
-            else mastermind symbols secret ((newGuess, evalGuess newGuess secret) : g) s
+                (newGuess, evalGuess newGuess secret) : guesses
+            else mastermind symbols secret ((newGuess, evalGuess newGuess secret) : guesses) space
 
 {-----------------------------
     CONSISTENCY FUNCTIONS
@@ -122,9 +126,9 @@ removeIndex list i = let (xs,ys) = splitAt i list in
     xs ++ drop 1 ys
 
 removeIndices :: [a] -> [Int] -> [a]
-removeIndices list indices = if not $ null indices
-        then do
-            let newList = removeIndex list $ head indices
-            removeIndices newList (map (\x -> x - 1) (drop 1 indices))
-        else
-            list
+removeIndices list [] = list
+removeIndices [] _ = []
+removeIndices list indices = 
+    do
+        let newList = removeIndex list $ head indices
+        removeIndices newList (map (\x -> x - 1) (drop 1 indices))
