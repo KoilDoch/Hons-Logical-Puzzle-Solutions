@@ -80,7 +80,8 @@ mastermind symbols secret guesses space =
         let g = isGuesses s secret guesses
         let newGuess = solveStep secret g s
         if (evalGuess newGuess secret == (4,0))
-            then (newGuess, evalGuess newGuess secret) : g
+            then
+                (newGuess, evalGuess newGuess secret) : g
             else mastermind symbols secret ((newGuess, evalGuess newGuess secret) : g) s
 
 {-----------------------------
