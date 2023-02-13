@@ -9,6 +9,8 @@ import Data.List
 import Test.QuickCheck
 import Control.Monad (replicateM)
 import Data.Data (gcast2)
+import GHC.StgToCmm.ExtCode (code)
+import GHC.Plugins (space)
 
 {-----------------------------
             TESTING
@@ -50,38 +52,57 @@ evalGuess g1 g2 =
 
 -- this function returns the next guess at the current step
 -- inputs the secret code, the previous guesses and all possible answers at the current step
--- solveStep :: Eq a => [a] -> [([a], (Int,Int))] -> [[a]] -> [a]
--- solveStep secret guesses space = head (pruneInconsistent (fst $ head guesses) secret space)
+solveStep :: Eq a => [a] -> [([a], (Int,Int))] -> [[a]] -> [a]
+solveStep secret guesses space = 
+    do
+        let newSpace = pruneInconsistent (fst $ head guesses) secret space
+        let nextStep = head newSpace
+        if allIdentical $ checkConsistencySet nextStep guesses secret
+            then nextStep
+            else solveStep secret guesses $ drop 1 newSpace
 
--- mastermind :: Eq a => [a] -> [a] -> [([a], (Int,Int))] -> [([a], (Int,Int))]
--- mastermind symbols code guesses = 
---     let guess = solveStep symbols guesses
---         check = checkGuess code guess
---     in if check == (0,4)
---         then (guess, (0,4)) : guesses
---         else mastermind symbols code ((guess,check) : guesses)
+isSpace :: [a] -> Int -> [[a]] -> [[a]]
+isSpace symbols i s =
+    if length s == 0
+        then generatePermutations symbols i
+        else s
 
+isGuesses :: Eq a => [[a]] -> [a] -> [([a], (Int,Int))] -> [([a], (Int,Int))]
+isGuesses space secret guesses =
+    if length guesses == 0
+        then [(head space, evalGuess (head space) secret)]
+        else guesses
+
+mastermind :: Eq a => [a] -> [a] -> [([a], (Int,Int))] -> [[a]] -> [([a], (Int,Int))]
+mastermind symbols secret guesses space =
+    do
+        let s = isSpace symbols (length secret) space
+        let g = isGuesses s secret guesses
+        let newGuess = solveStep secret g s
+        if (evalGuess newGuess secret == (4,0))
+            then (newGuess, evalGuess newGuess secret) : g
+            else mastermind symbols secret ((newGuess, evalGuess newGuess secret) : g) s
 
 {-----------------------------
     CONSISTENCY FUNCTIONS
 ------------------------------}
 
 -- -- function to evaluate if a guess is consistent with another with respect to the secret code
--- checkConsistency :: Eq a => [a] -> [a] -> [a] -> Bool
--- checkConsistency guess code secret = evalGuess guess code == evalGuess code secret
+checkConsistency :: Eq a => [a] -> [a] -> [a] -> Bool
+checkConsistency guess code secret = evalGuess guess code == evalGuess code secret
 
 -- -- function which checks if a new guess is consistent with all previous guesses with respect to the secret code
--- checkConsistencySet :: Eq a => [a] -> [([a], (Int,Int))] -> [a] -> [Bool]
--- checkConsistencySet code consistentSet secret = let conCodes = map (\(list,_) -> map (\x -> x) list) consistentSet
---  in map (\x -> evalGuess code x == evalGuess x secret) conCodes
+checkConsistencySet :: Eq a => [a] -> [([a], (Int,Int))] -> [a] -> [Bool]
+checkConsistencySet code consistentSet secret = let conCodes = map (\(list,_) -> map (\x -> x) list) consistentSet
+ in map (\x -> evalGuess code x == evalGuess x secret) conCodes
 
 {-----------------------------
     COMBINATORIAL FUNCTIONS
 ------------------------------}
 
 -- -- removes all inconsistent 
--- pruneInconsistent :: Eq a => [a] -> [a] -> [[a]] -> [[a]]
--- pruneInconsistent code secret space = filter (\x -> checkConsistency x code secret) space
+pruneInconsistent :: Eq a => [a] -> [a] -> [[a]] -> [[a]]
+pruneInconsistent code secret space = filter (\x -> checkConsistency x code secret) space
 
 -- generate all repeat permutations
 generatePermutations :: [a] -> Int -> [[a]]
