@@ -6,10 +6,9 @@
 {-# HLINT ignore "Eta reduce" #-}
 
 import Data.List
-import Distribution.Compat.CharParsing (space)
+import Test.QuickCheck
 import Control.Monad (replicateM)
 import Data.Data (gcast2)
-import System.Win32 (xBUTTON1)
 
 {-----------------------------
             TESTING
@@ -94,7 +93,7 @@ generatePermutations set size = replicateM size set
 
 -- check equality of a list, need to change to universal
 allIdentical :: [Bool] -> Bool
-allIdentical xs = and xs
+allIdentical = and
 
 removeIndex :: [a] -> Int -> [a]
 removeIndex list i = let (xs,ys) = splitAt i list in
@@ -107,8 +106,3 @@ removeIndices list indices = if not $ null indices
             removeIndices newList (map (\x -> x - 1) (drop 1 indices))
         else
             list
-
--- main :: IO()
--- main = do 
---     let x = mastermind ['A','B','C','D','E','F'] ['A','C','D','E'] []
---         in print (length x)
