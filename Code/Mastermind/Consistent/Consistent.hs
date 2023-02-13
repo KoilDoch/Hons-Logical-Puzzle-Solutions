@@ -8,10 +8,12 @@
 import Data.List
 import Distribution.Compat.CharParsing (space)
 import Control.Monad (replicateM)
+import Data.Data (gcast2)
+import System.Win32 (xBUTTON1)
 
-{-
-    TESTING
--}
+{-----------------------------
+            TESTING
+------------------------------}
 
 -- functions for use in testing using the interactive environment
 testSet :: Num a => [([a],(Int,Int))]
@@ -27,20 +29,30 @@ testSpace = [[1,2,3,3],[3,0,3,2],[0,3,2,3],[3,0,1,3],[4,4,4,4],[1,0,4,0]]
     MASTERMIND FUNCTIONS
 ------------------------------}
 
-checkWhite :: Eq a => [a] -> [a] -> [Int]
-checkWhite guess code = findIndices (\(x,y) -> x `elem` code && x /= y) (zip guess code)
+checkWhite :: Eq a => [a] -> [a] -> Int -> Int
+checkWhite g1 g2 count = case elemIndex (head g1) g2 of
+    Just n -> do 
+        if length g1 == 1 then count + 1
+        else checkWhite (drop 1 g1) (removeIndex g2 n) (count + 1)
+    Nothing -> 
+        if length g1 == 1 then count
+        else checkWhite (drop 1 g1) g2 count
 
-checkBlack :: Eq a => [a] -> [a] -> Int
-checkBlack guess code = length [x | (x,y) <- zip guess code, x == y]
+checkBlack :: Eq a => [a] -> [a] -> [Int]
+checkBlack g1 g2 = elemIndices True (zipWith (==) g1 g2)
 
--- EVAL
 evalGuess :: Eq a => [a] -> [a] -> (Int,Int)
-evalGuess guess code = (checkBlack guess code, length $ checkWhite guess code)
+evalGuess g1 g2 = 
+    do
+        let black = checkBlack g1 g2
+        if length black == 4 then (4,0)
+        else (length black,
+         checkWhite (removeIndices g1 black) (removeIndices g2 black) 0)
 
 -- this function returns the next guess at the current step
 -- inputs the secret code, the previous guesses and all possible answers at the current step
-solveStep :: Eq a => [a] -> [([a], (Int,Int))] -> [[a]] -> [a]
-solveStep secret guesses space = head (pruneInconsistent (fst $ head guesses) secret space)
+-- solveStep :: Eq a => [a] -> [([a], (Int,Int))] -> [[a]] -> [a]
+-- solveStep secret guesses space = head (pruneInconsistent (fst $ head guesses) secret space)
 
 -- mastermind :: Eq a => [a] -> [a] -> [([a], (Int,Int))] -> [([a], (Int,Int))]
 -- mastermind symbols code guesses = 
@@ -55,22 +67,22 @@ solveStep secret guesses space = head (pruneInconsistent (fst $ head guesses) se
     CONSISTENCY FUNCTIONS
 ------------------------------}
 
--- function to evaluate if a guess is consistent with another with respect to the secret code
-checkConsistency :: Eq a => [a] -> [a] -> [a] -> Bool
-checkConsistency guess code secret = evalGuess guess code == evalGuess code secret
+-- -- function to evaluate if a guess is consistent with another with respect to the secret code
+-- checkConsistency :: Eq a => [a] -> [a] -> [a] -> Bool
+-- checkConsistency guess code secret = evalGuess guess code == evalGuess code secret
 
--- function which checks if a new guess is consistent with all previous guesses with respect to the secret code
-checkConsistencySet :: Eq a => [a] -> [([a], (Int,Int))] -> [a] -> [Bool]
-checkConsistencySet code consistentSet secret = let conCodes = map (\(list,_) -> map (\x -> x) list) consistentSet
- in map (\x -> evalGuess code x == evalGuess x secret) conCodes
+-- -- function which checks if a new guess is consistent with all previous guesses with respect to the secret code
+-- checkConsistencySet :: Eq a => [a] -> [([a], (Int,Int))] -> [a] -> [Bool]
+-- checkConsistencySet code consistentSet secret = let conCodes = map (\(list,_) -> map (\x -> x) list) consistentSet
+--  in map (\x -> evalGuess code x == evalGuess x secret) conCodes
 
 {-----------------------------
     COMBINATORIAL FUNCTIONS
 ------------------------------}
 
--- removes all inconsistent 
-pruneInconsistent :: Eq a => [a] -> [a] -> [[a]] -> [[a]]
-pruneInconsistent code secret space = filter (\x -> checkConsistency x code secret) space
+-- -- removes all inconsistent 
+-- pruneInconsistent :: Eq a => [a] -> [a] -> [[a]] -> [[a]]
+-- pruneInconsistent code secret space = filter (\x -> checkConsistency x code secret) space
 
 -- generate all repeat permutations
 generatePermutations :: [a] -> Int -> [[a]]
@@ -83,6 +95,18 @@ generatePermutations set size = replicateM size set
 -- check equality of a list, need to change to universal
 allIdentical :: [Bool] -> Bool
 allIdentical xs = and xs
+
+removeIndex :: [a] -> Int -> [a]
+removeIndex list i = let (xs,ys) = splitAt i list in
+    xs ++ drop 1 ys
+
+removeIndices :: [a] -> [Int] -> [a]
+removeIndices list indices = if not $ null indices
+        then do
+            let newList = removeIndex list $ head indices
+            removeIndices newList (map (\x -> x - 1) (drop 1 indices))
+        else
+            list
 
 -- main :: IO()
 -- main = do 
