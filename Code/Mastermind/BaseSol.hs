@@ -1,0 +1,7 @@
+baseStep :: [Int] -> [Int]
+baseStep [] = [0,0,0,0]
+baseStep [a,b,c,d] | a < 5 = [a+1, b, c, d]
+                       | b < 5 = [0, b+1, c, d]
+                       | c < 5 = [0, 0, c+1, d]
+                       | d < 5 = [0, 0, 0, d+1]
+                       | otherwise = [0,0,0,0]

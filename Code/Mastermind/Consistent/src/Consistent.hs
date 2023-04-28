@@ -30,25 +30,20 @@ testSpace = [[1,2,3,3],[3,0,3,2],[0,3,2,3],[3,0,1,3],[4,4,4,4],[1,0,4,0]]
     MASTERMIND FUNCTIONS
 ------------------------------}
 
-checkWhite :: Eq a => [a] -> [a] -> Int -> Int
-checkWhite g1 g2 count = case elemIndex (head g1) g2 of
-    Just n -> do 
-        if length g1 == 1 then count + 1
-        else checkWhite (drop 1 g1) (removeIndex g2 n) (count + 1)
-    Nothing -> 
-        if length g1 == 1 then count
-        else checkWhite (drop 1 g1) g2 count
+checkWhite :: Eq a => [a] -> [a] -> [a] -> Int
+checkWhite [] _ _ = 0
+checkWhite _ [] _ = 0
+checkWhite _ _ [] = 0
+checkWhite (s:symbols) ys zs = min (countOccurences s ys) (countOccurences s ys) + checkWhite symbols ys zs
 
-checkBlack :: Eq a => [a] -> [a] -> [Int]
-checkBlack g1 g2 = elemIndices True (zipWith (==) g1 g2)
+checkBlack :: Eq a => [a] -> [a] -> Int
+checkBlack _ [] = 0
+checkBlack [] _ = 0
+checkBlack (x:xs) (y:ys) = if x == y then 1 + checkBlack xs ys else checkBlack xs ys
 
-evalGuess :: Eq a => [a] -> [a] -> (Int,Int)
-evalGuess g1 g2 = 
-    do
-        let black = checkBlack g1 g2
-        if length black == 4 then (4,0)
-        else (length black,
-         checkWhite (removeIndices g1 black) (removeIndices g2 black) 0)
+evalGuess :: Eq a => [a] -> [a] -> [a] -> (Int, Int)
+evalGuess symbols xs ys = let black = checkBlack xs ys 
+                    in (black, checkWhite symbols xs ys - black)
 
 -- this function returns the next guess at the current step
 -- inputs the secret code, the previous guesses and all possible answers at the current step
@@ -86,7 +81,7 @@ mastermind symbols secret guesses space =
         if evalGuess newGuess secret == (4,0)
             then
                 (newGuess, evalGuess newGuess secret) : guesses
-            else mastermind symbols secret ((newGuess, evalGuess newGuess secret) : guesses) space
+            else mastermind symbols secret ((newGuess, evalGuess newGuess secret) : guesses) space 
 
 {-----------------------------
     CONSISTENCY FUNCTIONS
@@ -112,10 +107,14 @@ pruneInconsistent code secret space = filter (\x -> checkConsistency x code secr
 -- generate all repeat permutations
 generatePermutations :: [a] -> Int -> [[a]]
 generatePermutations set size = replicateM size set
-
+--}
 {-----------------------------
     UTILITY FUNCTIONS
 ------------------------------}
+
+countOccurences :: Eq a => a -> [a] -> Int
+countOccurences _ [] = 0
+countOccurences x ys = length $ filter (x==) ys
 
 -- check equality of a list, need to change to universal
 allIdentical :: [Bool] -> Bool

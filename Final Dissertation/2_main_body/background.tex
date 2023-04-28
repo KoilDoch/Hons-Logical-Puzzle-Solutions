@@ -3,10 +3,26 @@
 
 Some text to explain what's to come. In \cref{sec:back_A} we explore concept A, then we continue with concept B in \cref{sec:back_B}
 
-\section{Concept A}
-\label{sec:back_A}
+\section{Combinatorial Problems}
 
-Doe introduces the context of Y \cite{doe2017exploring}. Smith et al. discuss the implementation of X \cite{smith2018implementing}. We implement W, as describe by Alice \cite{alice2016handbook}.
+The game of Mastermind belongs to a class of problems called combinatorial problems. The question of how to solve an instance of Mastermind can be instead approached as a decision problem which focuses on how to best navigate the search space of all possible combinations of the hidden code.
+
+A mastermind solution would then be understood as a search algorithm for finding the combination which satisfies the given restraints. The restraints given in this particular context would be the length of the hidden code and the set of possible symbols which construct the code. An additional yet critical constraint to developing sophisticated solutions are the responses received from the code maker when evaluating guesses.
+
+Considering the context of a Mastermind problem which gives the constraints of the code being four symbols in length and constructed from a set of six possible symbols the total search space would consist of 1296 possible responses which satisfy these constraints.
+
+A brute force solution could evaluate each individual member of the search space until the correct response is found; however this is both computationally expensive and time consuming when approaching such a broad range of possible responses. This can be improved by further constricting the search space through the introduction of an additional set of constraints.
+
+By defining the search space within the additional context of responses given for previous guesses the total number of search space members that need to be evaluated is lowered with each iteration.
+
+An example of this process is as such:
+
+The constraints of this example are that the length of the hidden code is four with six possible symbols constructing it.
+
+Before a guess is evaluated the full search space contains 1296 members. Consider that the first guess given returns a response of (2,1) which indicates that two of the symbols in the guess were in the correct position, one symbol was in the incorrect position and the final remaining symbol is not present within the code.
+
+By adding a new constraint with the information gained from this response the search space can be reduced from 1296 to [Need to redo calculation and percentage decrease]. Further constraints can be derived from additional responses and the relationship between these responses defined as a responses Consistency which will be explored in a later section.
+
 
 \section{Concept B}
 \label{sec:back_B}
